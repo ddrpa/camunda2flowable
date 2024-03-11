@@ -100,9 +100,9 @@ func convertFormField(formField camunda.FormField) FormProperty {
 		Name: formField.Label,
 		Type: formField.Type,
 		// 设置默认值
-		Readable:  "true",
-		Writeable: "true",
-		Required:  "false",
+		Readable: "true",
+		Writable: "true",
+		Required: "false",
 	}
 	// 检查表单项是否有约束条件，覆盖默认值
 	if formField.Validation.Constraint != nil && len(formField.Validation.Constraint) > 0 {
@@ -111,8 +111,8 @@ func convertFormField(formField camunda.FormField) FormProperty {
 			case "required":
 				res.Required = constraint.Config
 				break
-			case "writeable":
-				res.Writeable = constraint.Config
+			case "writable":
+				res.Writable = constraint.Config
 				break
 			case "readable":
 				res.Readable = constraint.Config

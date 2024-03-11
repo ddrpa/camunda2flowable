@@ -50,18 +50,18 @@ type ExtensionElements struct {
 }
 
 type FormProperty struct {
-	XMLName   xml.Name `xml:"flowable:formProperty"`
-	Id        string   `xml:"id,attr"`
-	Name      string   `xml:"name,attr,omitempty"`
-	Type      string   `xml:"type,attr"`
-	Readable  string   `xml:"readable,attr,omitempty"`
-	Writeable string   `xml:"writeable,attr,omitempty"`
-	Required  string   `xml:"required,attr,omitempty"`
-	Values    *[]Value `xml:"flowable:value,omitempty"`
+	XMLName  xml.Name `xml:"flowable:formProperty"`
+	Id       string   `xml:"id,attr"`
+	Name     string   `xml:"name,attr,omitempty"`
+	Type     string   `xml:"type,attr"`
+	Readable string   `xml:"readable,attr,omitempty"`
+	Writable string   `xml:"writable,attr,omitempty"`
+	Required string   `xml:"required,attr,omitempty"`
+	Values   *[]Value `xml:"flowable:value,omitempty"`
 }
 
 type Value struct {
-	XMLName xml.Name `xml:"flowable:Value"`
+	XMLName xml.Name `xml:"flowable:value"`
 	Id      string   `xml:"id,attr"`
 	Name    string   `xml:"name,attr"`
 }
