@@ -22,11 +22,15 @@
 
 ## 支持节点
 
-- StartEvent
-- UserTask
-  - 表单
-    - Constraint: Required/Writeable/Readable
-- EndEvent
+- 事件
+  - StartEvent
+  - EndEvent
+  - IntermediateCatchEvent(Message)
+- 活动
+  - UserTask
+    - 表单
+      - Constraint: Required/Writeable/Readable
+  - ServiceTask
 - ExclusiveGateway
 - SequenceFlow
   - tFormalExpression 条件表达式

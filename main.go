@@ -2,7 +2,6 @@ package main
 
 import (
 	"camunda2flowable/types/camunda"
-	"camunda2flowable/types/flowable"
 	"encoding/xml"
 	"fmt"
 	"github.com/akamensky/argparse"
@@ -40,19 +39,23 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		_ = file.Close()
+	}(file)
 	byteValue, _ := io.ReadAll(file)
 
 	var cDefinitions camunda.Definitions
-	xml.Unmarshal(byteValue, &cDefinitions)
+	_ = xml.Unmarshal(byteValue, &cDefinitions)
 
-	fProcess := flowable.ConvertProcess(cDefinitions.Process)
-	out, _ := xml.MarshalIndent(fProcess, "  ", "  ")
+	fMessages := ConvertMessages(cDefinitions.Message)
+	fMessagesInXML, _ := xml.MarshalIndent(fMessages, "  ", "  ")
+	fProcess := ConvertProcess(cDefinitions.Process)
+	fProcessInXML, _ := xml.MarshalIndent(fProcess, "  ", "  ")
 
 	// make tag self-closable
 	// 用零宽断言排除 <![CDATA[%s]]>
 	regex := regexp2.MustCompile("(?m)(?<=[A-Za-z\"]+)><\\/[A-Za-z:]*>$", regexp2.Multiline)
-	selfClosed, _ := regex.Replace(string(out), "/>", -1, -1)
+	selfClosed, _ := regex.Replace(string(fMessagesInXML)+"\n"+string(fProcessInXML), "/>", -1, -1)
 
 	fDefinitions := header + selfClosed + footer
 	fmt.Println(fDefinitions)

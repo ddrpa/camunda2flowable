@@ -1,44 +1,70 @@
-package flowable
+package main
 
 import (
 	"camunda2flowable/types/camunda"
+	"camunda2flowable/types/flowable"
 )
 
-func ConvertProcess(process camunda.Process) Process {
-	res := Process{
+func ConvertMessages(message []camunda.Message) []flowable.Message {
+	var res = make([]flowable.Message, 0)
+	for _, msg := range message {
+		res = append(res, flowable.Message{
+			Id:   msg.Id,
+			Name: msg.Name,
+		})
+	}
+	return res
+}
+
+func ConvertProcess(process camunda.Process) flowable.Process {
+	res := flowable.Process{
 		Id:           process.Id,
 		Name:         process.Name,
 		IsExecutable: "true",
 		StartEvent:   ConvertStartEvent(process.StartEvent),
 	}
 	if process.Documentation.Id != "" {
-		res.Documentation = &Documentation{
+		res.Documentation = &flowable.Documentation{
 			Id: process.Documentation.Id,
 		}
 	}
 	// convert userTasks
-	var userTasks = make([]UserTask, 0)
+	var userTasks = make([]flowable.UserTask, 0)
 	for _, userTask := range process.UserTasks {
 		userTasks = append(userTasks, convertUserTask(userTask))
 	}
 	res.UserTasks = userTasks
 
+	// convert serviceTasks
+	var serviceTasks = make([]flowable.ServiceTask, 0)
+	for _, serviceTask := range process.ServiceTasks {
+		serviceTasks = append(serviceTasks, convertServiceTask(serviceTask))
+	}
+	res.ServiceTasks = serviceTasks
+
 	// convert endEvents
-	var endEvents = make([]EndEvent, 0)
+	var endEvents = make([]flowable.EndEvent, 0)
 	for _, endEvent := range process.EndEvents {
 		endEvents = append(endEvents, convertEndEvent(endEvent))
 	}
 	res.EndEvents = endEvents
 
+	// convert intermediateCatchEvents
+	var intermediateCatchEvents = make([]flowable.IntermediateCatchEvent, 0)
+	for _, intermediateCatchEvent := range process.IntermediateCatchEvents {
+		intermediateCatchEvents = append(intermediateCatchEvents, convertIntermediateCatchEvent(intermediateCatchEvent))
+	}
+	res.IntermediateCatchEvents = intermediateCatchEvents
+
 	// convert exclusiveGateways
-	var exclusiveGateways = make([]ExclusiveGateway, 0)
+	var exclusiveGateways = make([]flowable.ExclusiveGateway, 0)
 	for _, exclusiveGateway := range process.ExclusiveGateways {
 		exclusiveGateways = append(exclusiveGateways, convertExclusiveGateway(exclusiveGateway))
 	}
 	res.ExclusiveGateways = exclusiveGateways
 
 	// convert sequenceFlows
-	var sequenceFlows = make([]SequenceFlow, 0)
+	var sequenceFlows = make([]flowable.SequenceFlow, 0)
 	for _, sequenceFlow := range process.SequenceFlows {
 		sequenceFlows = append(sequenceFlows, convertSequenceFlow(sequenceFlow))
 	}
@@ -46,14 +72,14 @@ func ConvertProcess(process camunda.Process) Process {
 	return res
 }
 
-func ConvertStartEvent(startEvent camunda.StartEvent) StartEvent {
-	res := StartEvent{
+func ConvertStartEvent(startEvent camunda.StartEvent) flowable.StartEvent {
+	res := flowable.StartEvent{
 		Id:                  startEvent.Id,
 		Name:                startEvent.Name,
 		FormFieldValidation: "false",
 	}
 	if startEvent.Documentation.Id != "" {
-		res.Documentation = &Documentation{
+		res.Documentation = &flowable.Documentation{
 			Id: startEvent.Documentation.Id,
 		}
 	}
@@ -66,8 +92,8 @@ func ConvertStartEvent(startEvent camunda.StartEvent) StartEvent {
 	return res
 }
 
-func convertUserTask(userTask camunda.UserTask) UserTask {
-	res := UserTask{
+func convertUserTask(userTask camunda.UserTask) flowable.UserTask {
+	res := flowable.UserTask{
 		Id:   userTask.Id,
 		Name: userTask.Name,
 	}
@@ -84,18 +110,33 @@ func convertUserTask(userTask camunda.UserTask) UserTask {
 	return res
 }
 
-func convertFormData(formFields []camunda.FormField) ExtensionElements {
-	var formProperties = make([]FormProperty, 0)
+func convertServiceTask(serviceTask camunda.ServiceTask) flowable.ServiceTask {
+	res := flowable.ServiceTask{
+		Id:    serviceTask.Id,
+		Name:  serviceTask.Name,
+		Async: "true",
+	}
+	// 这里多种类型不当一同出现，故使用了 if-else-if 结构
+	if serviceTask.Class != "" {
+		res.Class = serviceTask.Class
+	} else if serviceTask.DelegateExpression != "" {
+		res.DelegateExpression = serviceTask.DelegateExpression
+	}
+	return res
+}
+
+func convertFormData(formFields []camunda.FormField) flowable.ExtensionElements {
+	var formProperties = make([]flowable.FormProperty, 0)
 	for _, field := range formFields {
 		formProperties = append(formProperties, convertFormField(field))
 	}
-	return ExtensionElements{
+	return flowable.ExtensionElements{
 		FormProperties: &formProperties,
 	}
 }
 
-func convertFormField(formField camunda.FormField) FormProperty {
-	res := FormProperty{
+func convertFormField(formField camunda.FormField) flowable.FormProperty {
+	res := flowable.FormProperty{
 		Id:   formField.Id,
 		Name: formField.Label,
 		Type: formField.Type,
@@ -122,9 +163,9 @@ func convertFormField(formField camunda.FormField) FormProperty {
 	}
 	// 如果是枚举类型，需要复制枚举值
 	if formField.Type == "enum" {
-		var values = make([]Value, 0)
+		var values = make([]flowable.Value, 0)
 		for _, value := range formField.Values {
-			values = append(values, Value{
+			values = append(values, flowable.Value{
 				Id:   value.Id,
 				Name: value.Name,
 			})
@@ -134,36 +175,47 @@ func convertFormField(formField camunda.FormField) FormProperty {
 	return res
 }
 
-func convertExclusiveGateway(gateway camunda.ExclusiveGateway) ExclusiveGateway {
-	return ExclusiveGateway{
+func convertExclusiveGateway(gateway camunda.ExclusiveGateway) flowable.ExclusiveGateway {
+	return flowable.ExclusiveGateway{
 		Id:               gateway.Id,
 		Name:             gateway.Name,
 		GatewayDirection: "Diverging",
 	}
 }
 
-func convertEndEvent(endEvent camunda.EndEvent) EndEvent {
-	return EndEvent{
+func convertEndEvent(endEvent camunda.EndEvent) flowable.EndEvent {
+	return flowable.EndEvent{
 		Id:   endEvent.Id,
 		Name: endEvent.Name,
 	}
 }
 
-func convertSequenceFlow(flow camunda.SequenceFlow) SequenceFlow {
-	res := SequenceFlow{
+func convertIntermediateCatchEvent(event camunda.IntermediateCatchEvent) flowable.IntermediateCatchEvent {
+	return flowable.IntermediateCatchEvent{
+		Id:   event.Id,
+		Name: event.Name,
+		MessageEventDefinition: flowable.MessageEventDefinition{
+			Id:         event.MessageEventDefinition.Id,
+			MessageRef: event.MessageEventDefinition.MessageRef,
+		},
+	}
+}
+
+func convertSequenceFlow(flow camunda.SequenceFlow) flowable.SequenceFlow {
+	res := flowable.SequenceFlow{
 		Id:        flow.Id,
 		Name:      flow.Name,
 		SourceRef: flow.SourceRef,
 		TargetRef: flow.TargetRef,
 	}
 	if flow.ConditionExpression.Value != "" {
-		res.ConditionExpression = &ConditionExpression{
+		res.ConditionExpression = &flowable.ConditionExpression{
 			Type:  "tFormalExpression",
 			Value: flow.ConditionExpression.Value,
 		}
 	}
 	if flow.Documentation.Id != "" {
-		res.Documentation = &Documentation{
+		res.Documentation = &flowable.Documentation{
 			Id: flow.Documentation.Id,
 		}
 	}
