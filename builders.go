@@ -21,13 +21,19 @@ func ConvertProcess(process camunda.Process) flowable.Process {
 		Id:           process.Id,
 		Name:         process.Name,
 		IsExecutable: "true",
-		StartEvent:   convertStartEvent(process.StartEvent),
 	}
 	if process.Documentation.Value != "" {
 		res.Documentation = &flowable.Documentation{
 			Id: process.Documentation.Id,
 		}
 	}
+	// convert startEvents
+	var startEvents = make([]flowable.StartEvent, 0)
+	for _, startEvent := range process.StartEvents {
+		startEvents = append(startEvents, convertStartEvent(startEvent))
+	}
+	res.StartEvents = startEvents
+
 	// convert userTasks
 	var userTasks = make([]flowable.UserTask, 0)
 	for _, userTask := range process.UserTasks {
@@ -94,6 +100,13 @@ func convertStartEvent(startEvent camunda.StartEvent) flowable.StartEvent {
 		extensionElements := convertFormData(startEvent.ExtensionElements.FormData.FormFields)
 		res.ExtensionElements = &extensionElements
 		res.FormFieldValidation = "true"
+	}
+	if startEvent.MessageEventDefinition.MessageRef != "" {
+		messageEventDefinition := flowable.MessageEventDefinition{
+			Id:         startEvent.MessageEventDefinition.Id,
+			MessageRef: startEvent.MessageEventDefinition.MessageRef,
+		}
+		res.MessageEventDefinition = &messageEventDefinition
 	}
 	return res
 }

@@ -3,12 +3,13 @@ package flowable
 import "encoding/xml"
 
 type StartEvent struct {
-	XMLName             xml.Name           `xml:"startEvent"`
-	Id                  string             `xml:"id,attr"`
-	Name                string             `xml:"name,attr,omitempty"`
-	FormFieldValidation string             `xml:"flowable:formFieldValidation,attr"`
-	Documentation       *Documentation     `xml:"documentation"`
-	ExtensionElements   *ExtensionElements `xml:"extensionElements"`
+	XMLName                xml.Name                `xml:"startEvent"`
+	Id                     string                  `xml:"id,attr"`
+	Name                   string                  `xml:"name,attr,omitempty"`
+	FormFieldValidation    string                  `xml:"flowable:formFieldValidation,attr"`
+	Documentation          *Documentation          `xml:"documentation"`
+	ExtensionElements      *ExtensionElements      `xml:"extensionElements"`
+	MessageEventDefinition *MessageEventDefinition `xml:"messageEventDefinition"`
 }
 
 type EndEvent struct {

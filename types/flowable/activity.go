@@ -8,8 +8,8 @@ type UserTask struct {
 	Name                string             `xml:"name,attr,omitempty"`
 	CandidateGroups     string             `xml:"flowable:candidateGroups,attr,omitempty"`
 	FormFieldValidation string             `xml:"flowable:formFieldValidation,attr,omitempty"`
-	ExtensionElements   *ExtensionElements `xml:"extensionElements"`
 	Documentation       *Documentation     `xml:"documentation"`
+	ExtensionElements   *ExtensionElements `xml:"extensionElements"`
 }
 
 type ServiceTask struct {

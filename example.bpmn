@@ -50,7 +50,7 @@
       </bpmn2:extensionElements>
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${event_report_division==1}</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_3" sourceRef="StartEvent_1" targetRef="ExclusiveGateway_1">
+    <bpmn2:sequenceFlow id="SequenceFlow_3" sourceRef="none_start_event" targetRef="ExclusiveGateway_1">
       <bpmn2:documentation id="documentation_0XMSDQ" />
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_4" name="乡镇事件" sourceRef="ExclusiveGateway_1" targetRef="UserTask_3">
@@ -66,7 +66,7 @@
       <bpmn2:documentation id="documentation_vDNaqQ" />
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${flow_direction=='event_upgrade'}</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
-    <bpmn2:startEvent id="StartEvent_1" name="事件上报">
+    <bpmn2:startEvent id="none_start_event" name="事件上报">
       <bpmn2:documentation>{
 "user_action": []
 }</bpmn2:documentation>
@@ -89,6 +89,10 @@
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
     </bpmn2:startEvent>
     <bpmn2:userTask id="UserTask_1" name="网格员处理任务" camunda:candidateGroups="grid-${event_report_area}">
+      <bpmn2:documentation>{
+"user_action": [],
+"form": []
+}</bpmn2:documentation>
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
           <drools:metaValue>网格员处理任务</drools:metaValue>
@@ -154,9 +158,6 @@
         <drools:metaData name="elementname">
           <drools:metaValue>乡镇综合指挥室接收事件</drools:metaValue>
         </drools:metaData>
-        <camunda:formData>
-          <camunda:formField />
-        </camunda:formData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
       <bpmn2:outgoing>Flow_0c1s0hr</bpmn2:outgoing>
@@ -328,9 +329,10 @@
     <bpmn2:sequenceFlow id="Flow_1yqkbmt" sourceRef="Activity_1rm4pis" targetRef="Event_01qx1j2" />
   </bpmn2:process>
   <bpmn2:message id="Message_1d3h43s" name="MessageExternalWorkCompleted" />
+  <bpmn2:message id="Message_18thkhm" name="StartEventMessage" />
   <bpmndi:BPMNDiagram>
     <bpmndi:BPMNPlane bpmnElement="from_camunda_process">
-      <bpmndi:BPMNShape id="shape_StartEvent_1" bpmnElement="StartEvent_1">
+      <bpmndi:BPMNShape id="shape_StartEvent_1" bpmnElement="none_start_event">
         <dc:Bounds x="257" y="70" width="36" height="36" />
         <bpmndi:BPMNLabel id="BPMNLabel_VLZddA">
           <dc:Bounds x="253" y="46" width="44" height="14" />

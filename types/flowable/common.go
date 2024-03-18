@@ -14,7 +14,7 @@ type Process struct {
 	Name                    string                   `xml:"name,attr,omitempty"`
 	IsExecutable            string                   `xml:"isExecutable,attr"`
 	Documentation           *Documentation           `xml:"documentation"`
-	StartEvent              StartEvent               `xml:"startEvent"`
+	StartEvents             []StartEvent             `xml:"startEvent"`
 	UserTasks               []UserTask               `xml:"userTask"`
 	ServiceTasks            []ServiceTask            `xml:"serviceTask"`
 	EndEvents               []EndEvent               `xml:"endEvent"`

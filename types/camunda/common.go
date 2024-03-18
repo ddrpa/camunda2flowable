@@ -21,7 +21,7 @@ type Process struct {
 	ProcessType             string                   `xml:"processType,attr"`
 	IsExecutable            string                   `xml:"isExecutable,attr"`
 	Documentation           Documentation            `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL documentation"`
-	StartEvent              StartEvent               `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL startEvent"`
+	StartEvents             []StartEvent             `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL startEvent"`
 	UserTasks               []UserTask               `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL userTask"`
 	ServiceTasks            []ServiceTask            `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL serviceTask"`
 	EndEvents               []EndEvent               `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL endEvent"`
