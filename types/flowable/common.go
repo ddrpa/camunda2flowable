@@ -47,5 +47,6 @@ type Value struct {
 
 type Documentation struct {
 	XMLName xml.Name `xml:"documentation"`
-	Id      string   `xml:"id,attr"`
+	Id      string   `xml:"id,attr,omitempty"`
+	Value   string   `xml:",cdata"`
 }

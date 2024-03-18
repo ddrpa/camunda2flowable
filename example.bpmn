@@ -67,6 +67,9 @@
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${flow_direction=='event_upgrade'}</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:startEvent id="StartEvent_1" name="事件上报">
+      <bpmn2:documentation>{
+"user_action": []
+}</bpmn2:documentation>
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
           <drools:metaValue>事件上报</drools:metaValue>

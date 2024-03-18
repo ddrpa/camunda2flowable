@@ -21,9 +21,9 @@ func ConvertProcess(process camunda.Process) flowable.Process {
 		Id:           process.Id,
 		Name:         process.Name,
 		IsExecutable: "true",
-		StartEvent:   ConvertStartEvent(process.StartEvent),
+		StartEvent:   convertStartEvent(process.StartEvent),
 	}
-	if process.Documentation.Id != "" {
+	if process.Documentation.Value != "" {
 		res.Documentation = &flowable.Documentation{
 			Id: process.Documentation.Id,
 		}
@@ -72,16 +72,22 @@ func ConvertProcess(process camunda.Process) flowable.Process {
 	return res
 }
 
-func ConvertStartEvent(startEvent camunda.StartEvent) flowable.StartEvent {
+func convertDocumentationElement(documentation camunda.Documentation) flowable.Documentation {
+	return flowable.Documentation{
+		Id:    documentation.Id,
+		Value: documentation.Value,
+	}
+}
+
+func convertStartEvent(startEvent camunda.StartEvent) flowable.StartEvent {
 	res := flowable.StartEvent{
 		Id:                  startEvent.Id,
 		Name:                startEvent.Name,
 		FormFieldValidation: "false",
 	}
-	if startEvent.Documentation.Id != "" {
-		res.Documentation = &flowable.Documentation{
-			Id: startEvent.Documentation.Id,
-		}
+	if startEvent.Documentation.Value != "" {
+		documentation := convertDocumentationElement(startEvent.Documentation)
+		res.Documentation = &documentation
 	}
 	if (startEvent.ExtensionElements.FormData.FormFields != nil) && (len(startEvent.ExtensionElements.FormData.FormFields) > 0) {
 		// 有表单需要复制
@@ -107,6 +113,10 @@ func convertUserTask(userTask camunda.UserTask) flowable.UserTask {
 		res.ExtensionElements = &extensionElements
 		res.FormFieldValidation = "true"
 	}
+	if userTask.Documentation.Value != "" {
+		documentation := convertDocumentationElement(userTask.Documentation)
+		res.Documentation = &documentation
+	}
 	return res
 }
 
@@ -121,6 +131,10 @@ func convertServiceTask(serviceTask camunda.ServiceTask) flowable.ServiceTask {
 		res.Class = serviceTask.Class
 	} else if serviceTask.DelegateExpression != "" {
 		res.DelegateExpression = serviceTask.DelegateExpression
+	}
+	if serviceTask.Documentation.Value != "" {
+		documentation := convertDocumentationElement(serviceTask.Documentation)
+		res.Documentation = &documentation
 	}
 	return res
 }
@@ -214,10 +228,9 @@ func convertSequenceFlow(flow camunda.SequenceFlow) flowable.SequenceFlow {
 			Value: flow.ConditionExpression.Value,
 		}
 	}
-	if flow.Documentation.Id != "" {
-		res.Documentation = &flowable.Documentation{
-			Id: flow.Documentation.Id,
-		}
+	if flow.Documentation.Value != "" {
+		documentation := convertDocumentationElement(flow.Documentation)
+		res.Documentation = &documentation
 	}
 	return res
 }

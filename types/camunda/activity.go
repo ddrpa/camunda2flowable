@@ -8,12 +8,14 @@ type UserTask struct {
 	Name              string            `xml:"name,attr"`
 	CandidateGroups   string            `xml:"http://camunda.org/schema/1.0/bpmn candidateGroups,attr"`
 	ExtensionElements ExtensionElements `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL extensionElements"`
+	Documentation     Documentation     `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL documentation"`
 }
 
 type ServiceTask struct {
-	XMLName            xml.Name `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL serviceTask"`
-	Id                 string   `xml:"id,attr"`
-	Name               string   `xml:"name,attr"`
-	Class              string   `xml:"http://camunda.org/schema/1.0/bpmn class,attr"`
-	DelegateExpression string   `xml:"http://camunda.org/schema/1.0/bpmn delegateExpression,attr"`
+	XMLName            xml.Name      `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL serviceTask"`
+	Id                 string        `xml:"id,attr"`
+	Name               string        `xml:"name,attr"`
+	Class              string        `xml:"http://camunda.org/schema/1.0/bpmn class,attr"`
+	DelegateExpression string        `xml:"http://camunda.org/schema/1.0/bpmn delegateExpression,attr"`
+	Documentation      Documentation `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL documentation"`
 }

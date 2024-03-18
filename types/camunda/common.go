@@ -33,6 +33,7 @@ type Process struct {
 type Documentation struct {
 	XMLName xml.Name `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL documentation"`
 	Id      string   `xml:"id,attr"`
+	Value   string   `xml:",chardata"`
 }
 
 type ExtensionElements struct {
