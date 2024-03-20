@@ -75,6 +75,16 @@ func ConvertProcess(process camunda.Process) flowable.Process {
 		sequenceFlows = append(sequenceFlows, convertSequenceFlow(sequenceFlow))
 	}
 	res.SequenceFlows = sequenceFlows
+
+	// convert documentation
+	if process.Documentation.Value != "" {
+		documentation := flowable.Documentation{
+			Id:    process.Documentation.Id,
+			Value: process.Documentation.Value,
+		}
+		res.Documentation = &documentation
+	}
+
 	return res
 }
 
@@ -116,9 +126,17 @@ func convertUserTask(userTask camunda.UserTask) flowable.UserTask {
 		Id:   userTask.Id,
 		Name: userTask.Name,
 	}
+	if userTask.Assignee != "" {
+		res.Assignee = userTask.Assignee
+	}
 	if userTask.CandidateGroups != "" {
-		// 目前只复制候选用户组
 		res.CandidateGroups = userTask.CandidateGroups
+	}
+	if userTask.CandidateUsers != "" {
+		res.CandidateUsers = userTask.CandidateUsers
+	}
+	if userTask.DueDate != "" {
+		res.DueDate = userTask.DueDate
 	}
 	if (userTask.ExtensionElements.FormData.FormFields != nil) && (len(userTask.ExtensionElements.FormData.FormFields) > 0) {
 		// 有表单需要复制
@@ -130,14 +148,25 @@ func convertUserTask(userTask camunda.UserTask) flowable.UserTask {
 		documentation := convertDocumentationElement(userTask.Documentation)
 		res.Documentation = &documentation
 	}
+	// 多实例任务
+	if userTask.MultiInstanceLoopCharacteristics.Collection != "" {
+		multiInstanceLoopCharacteristics := flowable.MultiInstanceLoopCharacteristics{
+			Collection:      userTask.MultiInstanceLoopCharacteristics.Collection,
+			ElementVariable: userTask.MultiInstanceLoopCharacteristics.ElementVariable,
+			CompletionCondition: flowable.CompletionCondition{
+				Type:  "tFormalExpression",
+				Value: userTask.MultiInstanceLoopCharacteristics.CompletionCondition.Value,
+			},
+		}
+		res.MultiInstanceLoopCharacteristics = &multiInstanceLoopCharacteristics
+	}
 	return res
 }
 
 func convertServiceTask(serviceTask camunda.ServiceTask) flowable.ServiceTask {
 	res := flowable.ServiceTask{
-		Id:    serviceTask.Id,
-		Name:  serviceTask.Name,
-		Async: "true",
+		Id:   serviceTask.Id,
+		Name: serviceTask.Name,
 	}
 	// 这里多种类型不当一同出现，故使用了 if-else-if 结构
 	if serviceTask.Class != "" {

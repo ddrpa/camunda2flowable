@@ -306,7 +306,7 @@
     <bpmn2:sequenceFlow id="Flow_1ysv5ut" name="网格自行处理" sourceRef="ExclusiveGateway_2" targetRef="Event_1942rbb">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${flow_direction=='handle_on_this_level'}</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
-    <bpmn2:serviceTask id="Activity_06v710a" name="发起联合办理" camunda:class="cc.ddrpa.vikare.application.agent.SomeExternalSystemDelgate">
+    <bpmn2:serviceTask id="Activity_06v710a" name="发起联合办理" camunda:class="cc.ddrpa.vikare.application.agent.SomeExternalSystemDelegate">
       <bpmn2:incoming>Flow_1tygso2</bpmn2:incoming>
       <bpmn2:outgoing>Flow_1gwty2m</bpmn2:outgoing>
     </bpmn2:serviceTask>
@@ -318,7 +318,7 @@
     </bpmn2:intermediateCatchEvent>
     <bpmn2:sequenceFlow id="Flow_1gwty2m" sourceRef="Activity_06v710a" targetRef="Event_1dmfmrd" />
     <bpmn2:sequenceFlow id="Flow_1tygso2" sourceRef="Activity_04azqmz" targetRef="Activity_06v710a" />
-    <bpmn2:serviceTask id="Activity_1rm4pis" name="Actually do nothing" camunda:class="cc.ddrpa.vikare.application.agent.SomeExternalSystemDelgate">
+    <bpmn2:serviceTask id="Activity_1rm4pis" name="Actually do nothing" camunda:class="cc.ddrpa.vikare.application.agent.SomeExternalSystemDelegate">
       <bpmn2:incoming>Flow_15bourl</bpmn2:incoming>
       <bpmn2:outgoing>Flow_1yqkbmt</bpmn2:outgoing>
     </bpmn2:serviceTask>
