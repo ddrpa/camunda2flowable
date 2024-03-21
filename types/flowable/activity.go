@@ -24,16 +24,3 @@ type ServiceTask struct {
 	DelegateExpression string         `xml:"flowable:delegateExpression,attr,omitempty"`
 	Documentation      *Documentation `xml:"documentation"`
 }
-
-type MultiInstanceLoopCharacteristics struct {
-	XMLName             xml.Name            `xml:"multiInstanceLoopCharacteristics"`
-	Collection          string              `xml:"flowable:collection,attr"`
-	ElementVariable     string              `xml:"flowable:elementVariable,attr"`
-	CompletionCondition CompletionCondition `xml:"completionCondition"`
-}
-
-type CompletionCondition struct {
-	XMLName xml.Name `xml:"completionCondition"`
-	Type    string   `xml:"xsi:type,attr"`
-	Value   string   `xml:",cdata"`
-}

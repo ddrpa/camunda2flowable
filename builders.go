@@ -99,20 +99,28 @@ func ConvertProcess(process camunda.Process) flowable.Process {
 
 func ConvertSubProcess(process camunda.SubProcess) flowable.SubProcess {
 	res := flowable.SubProcess{
-		Id:   process.Id,
-		Name: process.Name,
+		Id:          process.Id,
+		Name:        process.Name,
+		StartEvents: convertStartEvent(process.StartEvents),
 	}
 	if process.Documentation.Value != "" {
 		res.Documentation = &flowable.Documentation{
 			Id: process.Documentation.Id,
 		}
 	}
-	// convert startEvents
-	var startEvents = make([]flowable.StartEvent, 0)
-	for _, startEvent := range process.StartEvents {
-		startEvents = append(startEvents, convertStartEvent(startEvent))
+
+	// convert multiInstanceLoopCharacteristics
+	if process.MultiInstanceLoopCharacteristics.Collection != "" {
+		multiInstanceLoopCharacteristics := flowable.MultiInstanceLoopCharacteristics{
+			Collection:      process.MultiInstanceLoopCharacteristics.Collection,
+			ElementVariable: process.MultiInstanceLoopCharacteristics.ElementVariable,
+			CompletionCondition: flowable.CompletionCondition{
+				Type:  "tFormalExpression",
+				Value: process.MultiInstanceLoopCharacteristics.CompletionCondition.Value,
+			},
+		}
+		res.MultiInstanceLoopCharacteristics = &multiInstanceLoopCharacteristics
 	}
-	res.StartEvents = startEvents
 
 	// convert userTasks
 	var userTasks = make([]flowable.UserTask, 0)

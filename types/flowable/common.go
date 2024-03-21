@@ -25,18 +25,19 @@ type Process struct {
 }
 
 type SubProcess struct {
-	XMLName                 xml.Name                 `xml:"subProcess"`
-	Id                      string                   `xml:"id,attr"`
-	Name                    string                   `xml:"name,attr,omitempty"`
-	Documentation           *Documentation           `xml:"documentation"`
-	SubProcesses            []SubProcess             `xml:"subProcess"`
-	StartEvents             []StartEvent             `xml:"startEvent"`
-	UserTasks               []UserTask               `xml:"userTask"`
-	ServiceTasks            []ServiceTask            `xml:"serviceTask"`
-	EndEvents               []EndEvent               `xml:"endEvent"`
-	IntermediateCatchEvents []IntermediateCatchEvent `xml:"intermediateCatchEvent"`
-	ExclusiveGateways       []ExclusiveGateway       `xml:"exclusiveGateway"`
-	SequenceFlows           []SequenceFlow           `xml:"sequenceFlow"`
+	XMLName                          xml.Name                          `xml:"subProcess"`
+	Id                               string                            `xml:"id,attr"`
+	Name                             string                            `xml:"name,attr,omitempty"`
+	Documentation                    *Documentation                    `xml:"documentation"`
+	MultiInstanceLoopCharacteristics *MultiInstanceLoopCharacteristics `xml:"multiInstanceLoopCharacteristics"`
+	SubProcesses                     []SubProcess                      `xml:"subProcess"`
+	StartEvents                      StartEvent                        `xml:"startEvent"`
+	UserTasks                        []UserTask                        `xml:"userTask"`
+	ServiceTasks                     []ServiceTask                     `xml:"serviceTask"`
+	EndEvents                        []EndEvent                        `xml:"endEvent"`
+	IntermediateCatchEvents          []IntermediateCatchEvent          `xml:"intermediateCatchEvent"`
+	ExclusiveGateways                []ExclusiveGateway                `xml:"exclusiveGateway"`
+	SequenceFlows                    []SequenceFlow                    `xml:"sequenceFlow"`
 }
 
 type ExtensionElements struct {
@@ -64,5 +65,18 @@ type Value struct {
 type Documentation struct {
 	XMLName xml.Name `xml:"documentation"`
 	Id      string   `xml:"id,attr,omitempty"`
+	Value   string   `xml:",cdata"`
+}
+
+type MultiInstanceLoopCharacteristics struct {
+	XMLName             xml.Name            `xml:"multiInstanceLoopCharacteristics"`
+	Collection          string              `xml:"flowable:collection,attr"`
+	ElementVariable     string              `xml:"flowable:elementVariable,attr"`
+	CompletionCondition CompletionCondition `xml:"completionCondition"`
+}
+
+type CompletionCondition struct {
+	XMLName xml.Name `xml:"completionCondition"`
+	Type    string   `xml:"xsi:type,attr"`
 	Value   string   `xml:",cdata"`
 }
