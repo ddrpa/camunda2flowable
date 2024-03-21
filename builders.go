@@ -85,6 +85,95 @@ func ConvertProcess(process camunda.Process) flowable.Process {
 		res.Documentation = &documentation
 	}
 
+	// convert subProcesses
+	if (process.SubProcesses != nil) && (len(process.SubProcesses) > 0) {
+		var subProcesses = make([]flowable.SubProcess, 0)
+		for _, subProcess := range process.SubProcesses {
+			subProcesses = append(subProcesses, ConvertSubProcess(subProcess))
+		}
+		res.SubProcesses = subProcesses
+	}
+
+	return res
+}
+
+func ConvertSubProcess(process camunda.SubProcess) flowable.SubProcess {
+	res := flowable.SubProcess{
+		Id:   process.Id,
+		Name: process.Name,
+	}
+	if process.Documentation.Value != "" {
+		res.Documentation = &flowable.Documentation{
+			Id: process.Documentation.Id,
+		}
+	}
+	// convert startEvents
+	var startEvents = make([]flowable.StartEvent, 0)
+	for _, startEvent := range process.StartEvents {
+		startEvents = append(startEvents, convertStartEvent(startEvent))
+	}
+	res.StartEvents = startEvents
+
+	// convert userTasks
+	var userTasks = make([]flowable.UserTask, 0)
+	for _, userTask := range process.UserTasks {
+		userTasks = append(userTasks, convertUserTask(userTask))
+	}
+	res.UserTasks = userTasks
+
+	// convert serviceTasks
+	var serviceTasks = make([]flowable.ServiceTask, 0)
+	for _, serviceTask := range process.ServiceTasks {
+		serviceTasks = append(serviceTasks, convertServiceTask(serviceTask))
+	}
+	res.ServiceTasks = serviceTasks
+
+	// convert endEvents
+	var endEvents = make([]flowable.EndEvent, 0)
+	for _, endEvent := range process.EndEvents {
+		endEvents = append(endEvents, convertEndEvent(endEvent))
+	}
+	res.EndEvents = endEvents
+
+	// convert intermediateCatchEvents
+	var intermediateCatchEvents = make([]flowable.IntermediateCatchEvent, 0)
+	for _, intermediateCatchEvent := range process.IntermediateCatchEvents {
+		intermediateCatchEvents = append(intermediateCatchEvents, convertIntermediateCatchEvent(intermediateCatchEvent))
+	}
+	res.IntermediateCatchEvents = intermediateCatchEvents
+
+	// convert exclusiveGateways
+	var exclusiveGateways = make([]flowable.ExclusiveGateway, 0)
+	for _, exclusiveGateway := range process.ExclusiveGateways {
+		exclusiveGateways = append(exclusiveGateways, convertExclusiveGateway(exclusiveGateway))
+	}
+	res.ExclusiveGateways = exclusiveGateways
+
+	// convert sequenceFlows
+	var sequenceFlows = make([]flowable.SequenceFlow, 0)
+	for _, sequenceFlow := range process.SequenceFlows {
+		sequenceFlows = append(sequenceFlows, convertSequenceFlow(sequenceFlow))
+	}
+	res.SequenceFlows = sequenceFlows
+
+	// convert documentation
+	if process.Documentation.Value != "" {
+		documentation := flowable.Documentation{
+			Id:    process.Documentation.Id,
+			Value: process.Documentation.Value,
+		}
+		res.Documentation = &documentation
+	}
+
+	// convert subProcesses
+	if (process.SubProcesses != nil) && (len(process.SubProcesses) > 0) {
+		var subProcesses = make([]flowable.SubProcess, 0)
+		for _, subProcess := range process.SubProcesses {
+			subProcesses = append(subProcesses, ConvertSubProcess(subProcess))
+		}
+		res.SubProcesses = subProcesses
+	}
+
 	return res
 }
 
