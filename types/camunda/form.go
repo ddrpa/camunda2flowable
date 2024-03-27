@@ -86,6 +86,9 @@ func (field FormField) Convert() flowable.FormProperty {
 			case "readable":
 				res.Readable = constraint.Config
 				break
+			default:
+				// TODO 其他约束条件没有地方可去，暂时丢弃
+				break
 			}
 		}
 	}
