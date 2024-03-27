@@ -58,24 +58,24 @@ func main() {
 	definitionDir := strings.TrimSuffix(*source, filepath.Ext(*source))
 	// 查找 BPMN 文件所在目录下是否有同名目录，如果有，将该目录下的 JSON 文件内容赋值给对应的 Documentation
 	if _, err := os.Stat(definitionDir); !os.IsNotExist(err) {
-		activitieyIds := make([]string, 0)
+		activityIds := make([]string, 0)
 		files, _ := os.ReadDir(definitionDir)
 		for _, f := range files {
 			if strings.HasSuffix(f.Name(), ".json") {
 				// if f is JSON file, add to array
 				activityId := strings.TrimSuffix(f.Name(), filepath.Ext(f.Name()))
-				activitieyIds = append(activitieyIds, activityId)
+				activityIds = append(activityIds, activityId)
 			}
 		}
-		if len(activitieyIds) != 0 {
+		if len(activityIds) != 0 {
 			for _, event := range fProcess.StartEvents {
-				if slices.Contains(activitieyIds, event.Id) {
+				if slices.Contains(activityIds, event.Id) {
 					documentation, _ := os.ReadFile(filepath.Join(definitionDir, event.Id+".json"))
 					event.Documentation.Value = string(documentation)
 				}
 			}
 			for _, task := range fProcess.UserTasks {
-				if slices.Contains(activitieyIds, task.Id) {
+				if slices.Contains(activityIds, task.Id) {
 					documentation, _ := os.ReadFile(filepath.Join(definitionDir, task.Id+".json"))
 					task.Documentation.Value = string(documentation)
 				}

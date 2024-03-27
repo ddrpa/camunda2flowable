@@ -8,10 +8,7 @@ import (
 func ConvertMessages(message []camunda.Message) []flowable.Message {
 	var res = make([]flowable.Message, 0)
 	for _, msg := range message {
-		res = append(res, flowable.Message{
-			Id:   msg.Id,
-			Name: msg.Name,
-		})
+		res = append(res, msg.Convert())
 	}
 	return res
 }
@@ -19,10 +16,7 @@ func ConvertMessages(message []camunda.Message) []flowable.Message {
 func ConvertSignals(signal []camunda.Signal) []flowable.Signal {
 	var res = make([]flowable.Signal, 0)
 	for _, sig := range signal {
-		res = append(res, flowable.Signal{
-			Id:   sig.Id,
-			Name: sig.Name,
-		})
+		res = append(res, sig.Convert())
 	}
 	return res
 }
@@ -34,372 +28,121 @@ func ConvertProcess(process camunda.Process) flowable.Process {
 		IsExecutable: "true",
 	}
 	if process.Documentation.Value != "" {
-		res.Documentation = &flowable.Documentation{
-			Id: process.Documentation.Id,
-		}
-	}
-	// convert startEvents
-	var startEvents = make([]flowable.StartEvent, 0)
-	for _, startEvent := range process.StartEvents {
-		startEvents = append(startEvents, convertStartEvent(startEvent))
-	}
-	res.StartEvents = startEvents
-
-	// convert userTasks
-	var userTasks = make([]flowable.UserTask, 0)
-	for _, userTask := range process.UserTasks {
-		userTasks = append(userTasks, convertUserTask(userTask))
-	}
-	res.UserTasks = userTasks
-
-	// convert serviceTasks
-	var serviceTasks = make([]flowable.ServiceTask, 0)
-	for _, serviceTask := range process.ServiceTasks {
-		serviceTasks = append(serviceTasks, convertServiceTask(serviceTask))
-	}
-	res.ServiceTasks = serviceTasks
-
-	// convert receiveTasks
-	var receiveTasks = make([]flowable.ReceiveTask, 0)
-	for _, receiveTask := range process.ReceiveTasks {
-		receiveTasks = append(receiveTasks, flowable.ReceiveTask{
-			Id:         receiveTask.Id,
-			MessageRef: receiveTask.MessageRef,
-		})
-	}
-
-	// convert endEvents
-	var endEvents = make([]flowable.EndEvent, 0)
-	for _, endEvent := range process.EndEvents {
-		endEvents = append(endEvents, convertEndEvent(endEvent))
-	}
-	res.EndEvents = endEvents
-
-	// convert intermediateCatchEvents
-	var intermediateCatchEvents = make([]flowable.IntermediateCatchEvent, 0)
-	for _, intermediateCatchEvent := range process.IntermediateCatchEvents {
-		intermediateCatchEvents = append(intermediateCatchEvents, convertIntermediateCatchEvent(intermediateCatchEvent))
-	}
-	res.IntermediateCatchEvents = intermediateCatchEvents
-
-	// convert exclusiveGateways
-	var exclusiveGateways = make([]flowable.ExclusiveGateway, 0)
-	for _, exclusiveGateway := range process.ExclusiveGateways {
-		exclusiveGateways = append(exclusiveGateways, convertExclusiveGateway(exclusiveGateway))
-	}
-	res.ExclusiveGateways = exclusiveGateways
-
-	// convert sequenceFlows
-	var sequenceFlows = make([]flowable.SequenceFlow, 0)
-	for _, sequenceFlow := range process.SequenceFlows {
-		sequenceFlows = append(sequenceFlows, convertSequenceFlow(sequenceFlow))
-	}
-	res.SequenceFlows = sequenceFlows
-
-	// convert documentation
-	if process.Documentation.Value != "" {
-		documentation := flowable.Documentation{
-			Id:    process.Documentation.Id,
-			Value: process.Documentation.Value,
-		}
+		documentation := process.Documentation.Convert()
 		res.Documentation = &documentation
 	}
 
-	// convert subProcesses
+	res.StartEvents = convertStartEvents(process.StartEvents)
+	res.EndEvents = convertEndEvents(process.EndEvents)
+	res.IntermediateCatchEvents = convertIntermediateCatchEvents(process.IntermediateCatchEvents)
+
+	res.UserTasks = convertUserTasks(process.UserTasks)
+	res.ServiceTasks = convertServiceTasks(process.ServiceTasks)
+	res.ReceiveTasks = convertReceiveTasks(process.ReceiveTasks)
+
+	res.ExclusiveGateways = convertExclusiveGateways(process.ExclusiveGateways)
+
+	res.SequenceFlows = convertSequenceFlows(process.SequenceFlows)
+
 	if (process.SubProcesses != nil) && (len(process.SubProcesses) > 0) {
 		var subProcesses = make([]flowable.SubProcess, 0)
 		for _, subProcess := range process.SubProcesses {
-			subProcesses = append(subProcesses, ConvertSubProcess(subProcess))
+			subProcesses = append(subProcesses, convertSubProcess(subProcess))
 		}
 		res.SubProcesses = subProcesses
 	}
-
 	return res
 }
 
-func ConvertSubProcess(process camunda.SubProcess) flowable.SubProcess {
+func convertStartEvents(startEvents []camunda.StartEvent) []flowable.StartEvent {
+	var res = make([]flowable.StartEvent, 0)
+	for _, startEvent := range startEvents {
+		res = append(res, startEvent.Convert())
+	}
+	return res
+}
+
+func convertUserTasks(userTasks []camunda.UserTask) []flowable.UserTask {
+	var res = make([]flowable.UserTask, 0)
+	for _, userTask := range userTasks {
+		res = append(res, userTask.Convert())
+	}
+	return res
+}
+
+func convertServiceTasks(serviceTasks []camunda.ServiceTask) []flowable.ServiceTask {
+	var res = make([]flowable.ServiceTask, 0)
+	for _, serviceTask := range serviceTasks {
+		res = append(res, serviceTask.Convert())
+	}
+	return res
+}
+
+func convertReceiveTasks(receiveTasks []camunda.ReceiveTask) []flowable.ReceiveTask {
+	var res = make([]flowable.ReceiveTask, 0)
+	for _, receiveTask := range receiveTasks {
+		res = append(res, receiveTask.Convert())
+	}
+	return res
+}
+
+func convertEndEvents(endEvents []camunda.EndEvent) []flowable.EndEvent {
+	var res = make([]flowable.EndEvent, 0)
+	for _, endEvent := range endEvents {
+		res = append(res, endEvent.Convert())
+	}
+	return res
+}
+
+func convertIntermediateCatchEvents(intermediateCatchEvents []camunda.IntermediateCatchEvent) []flowable.IntermediateCatchEvent {
+	var res = make([]flowable.IntermediateCatchEvent, 0)
+	for _, intermediateCatchEvent := range intermediateCatchEvents {
+		res = append(res, intermediateCatchEvent.Convert())
+	}
+	return res
+}
+
+func convertExclusiveGateways(exclusiveGateways []camunda.ExclusiveGateway) []flowable.ExclusiveGateway {
+	var res = make([]flowable.ExclusiveGateway, 0)
+	for _, exclusiveGateway := range exclusiveGateways {
+		res = append(res, exclusiveGateway.Convert())
+	}
+	return res
+}
+
+func convertSequenceFlows(sequenceFlows []camunda.SequenceFlow) []flowable.SequenceFlow {
+	var res = make([]flowable.SequenceFlow, 0)
+	for _, sequenceFlow := range sequenceFlows {
+		res = append(res, sequenceFlow.Convert())
+	}
+	return res
+}
+
+func convertSubProcess(process camunda.SubProcess) flowable.SubProcess {
 	res := flowable.SubProcess{
 		Id:          process.Id,
 		Name:        process.Name,
-		StartEvents: convertStartEvent(process.StartEvents),
+		StartEvents: process.StartEvents.Convert(),
 	}
 	if process.Documentation.Value != "" {
-		res.Documentation = &flowable.Documentation{
-			Id: process.Documentation.Id,
-		}
+		documentation := process.Documentation.Convert()
+		res.Documentation = &documentation
 	}
+	res.EndEvents = convertEndEvents(process.EndEvents)
+	res.IntermediateCatchEvents = convertIntermediateCatchEvents(process.IntermediateCatchEvents)
 
-	// convert multiInstanceLoopCharacteristics
+	res.UserTasks = convertUserTasks(process.UserTasks)
+	res.ServiceTasks = convertServiceTasks(process.ServiceTasks)
+	res.ReceiveTasks = convertReceiveTasks(process.ReceiveTasks)
+
+	res.ExclusiveGateways = convertExclusiveGateways(process.ExclusiveGateways)
+
+	res.SequenceFlows = convertSequenceFlows(process.SequenceFlows)
+
 	if process.MultiInstanceLoopCharacteristics.Collection != "" {
-		multiInstanceLoopCharacteristics := flowable.MultiInstanceLoopCharacteristics{
-			Collection:      process.MultiInstanceLoopCharacteristics.Collection,
-			ElementVariable: process.MultiInstanceLoopCharacteristics.ElementVariable,
-			CompletionCondition: flowable.CompletionCondition{
-				Type:  "tFormalExpression",
-				Value: process.MultiInstanceLoopCharacteristics.CompletionCondition.Value,
-			},
-		}
+		multiInstanceLoopCharacteristics := process.MultiInstanceLoopCharacteristics.Convert()
 		res.MultiInstanceLoopCharacteristics = &multiInstanceLoopCharacteristics
 	}
-
-	// convert userTasks
-	var userTasks = make([]flowable.UserTask, 0)
-	for _, userTask := range process.UserTasks {
-		userTasks = append(userTasks, convertUserTask(userTask))
-	}
-	res.UserTasks = userTasks
-
-	// convert serviceTasks
-	var serviceTasks = make([]flowable.ServiceTask, 0)
-	for _, serviceTask := range process.ServiceTasks {
-		serviceTasks = append(serviceTasks, convertServiceTask(serviceTask))
-	}
-	res.ServiceTasks = serviceTasks
-
-	// convert receiveTasks
-	var receiveTasks = make([]flowable.ReceiveTask, 0)
-	for _, receiveTask := range process.ReceiveTasks {
-		receiveTasks = append(receiveTasks, flowable.ReceiveTask{
-			Id:         receiveTask.Id,
-			MessageRef: receiveTask.MessageRef,
-		})
-
-	}
-
-	// convert endEvents
-	var endEvents = make([]flowable.EndEvent, 0)
-	for _, endEvent := range process.EndEvents {
-		endEvents = append(endEvents, convertEndEvent(endEvent))
-	}
-	res.EndEvents = endEvents
-
-	// convert intermediateCatchEvents
-	var intermediateCatchEvents = make([]flowable.IntermediateCatchEvent, 0)
-	for _, intermediateCatchEvent := range process.IntermediateCatchEvents {
-		intermediateCatchEvents = append(intermediateCatchEvents, convertIntermediateCatchEvent(intermediateCatchEvent))
-	}
-	res.IntermediateCatchEvents = intermediateCatchEvents
-
-	// convert exclusiveGateways
-	var exclusiveGateways = make([]flowable.ExclusiveGateway, 0)
-	for _, exclusiveGateway := range process.ExclusiveGateways {
-		exclusiveGateways = append(exclusiveGateways, convertExclusiveGateway(exclusiveGateway))
-	}
-	res.ExclusiveGateways = exclusiveGateways
-
-	// convert sequenceFlows
-	var sequenceFlows = make([]flowable.SequenceFlow, 0)
-	for _, sequenceFlow := range process.SequenceFlows {
-		sequenceFlows = append(sequenceFlows, convertSequenceFlow(sequenceFlow))
-	}
-	res.SequenceFlows = sequenceFlows
-
-	// convert documentation
-	if process.Documentation.Value != "" {
-		documentation := flowable.Documentation{
-			Id:    process.Documentation.Id,
-			Value: process.Documentation.Value,
-		}
-		res.Documentation = &documentation
-	}
-
-	// convert subProcesses
-	if (process.SubProcesses != nil) && (len(process.SubProcesses) > 0) {
-		var subProcesses = make([]flowable.SubProcess, 0)
-		for _, subProcess := range process.SubProcesses {
-			subProcesses = append(subProcesses, ConvertSubProcess(subProcess))
-		}
-		res.SubProcesses = subProcesses
-	}
-
-	return res
-}
-
-func convertDocumentationElement(documentation camunda.Documentation) flowable.Documentation {
-	return flowable.Documentation{
-		Id:    documentation.Id,
-		Value: documentation.Value,
-	}
-}
-
-func convertStartEvent(startEvent camunda.StartEvent) flowable.StartEvent {
-	res := flowable.StartEvent{
-		Id:                  startEvent.Id,
-		Name:                startEvent.Name,
-		FormFieldValidation: "false",
-	}
-	if startEvent.Documentation.Value != "" {
-		documentation := convertDocumentationElement(startEvent.Documentation)
-		res.Documentation = &documentation
-	}
-	if (startEvent.ExtensionElements.FormData.FormFields != nil) && (len(startEvent.ExtensionElements.FormData.FormFields) > 0) {
-		// 有表单需要复制
-		extensionElements := convertFormData(startEvent.ExtensionElements.FormData.FormFields)
-		res.ExtensionElements = &extensionElements
-		res.FormFieldValidation = "true"
-	}
-	if startEvent.MessageEventDefinition.MessageRef != "" {
-		messageEventDefinition := flowable.MessageEventDefinition{
-			Id:         startEvent.MessageEventDefinition.Id,
-			MessageRef: startEvent.MessageEventDefinition.MessageRef,
-		}
-		res.MessageEventDefinition = &messageEventDefinition
-	}
-	return res
-}
-
-func convertUserTask(userTask camunda.UserTask) flowable.UserTask {
-	res := flowable.UserTask{
-		Id:   userTask.Id,
-		Name: userTask.Name,
-	}
-	if userTask.Assignee != "" {
-		res.Assignee = userTask.Assignee
-	}
-	if userTask.CandidateGroups != "" {
-		res.CandidateGroups = userTask.CandidateGroups
-	}
-	if userTask.CandidateUsers != "" {
-		res.CandidateUsers = userTask.CandidateUsers
-	}
-	if userTask.DueDate != "" {
-		res.DueDate = userTask.DueDate
-	}
-	if (userTask.ExtensionElements.FormData.FormFields != nil) && (len(userTask.ExtensionElements.FormData.FormFields) > 0) {
-		// 有表单需要复制
-		extensionElements := convertFormData(userTask.ExtensionElements.FormData.FormFields)
-		res.ExtensionElements = &extensionElements
-		res.FormFieldValidation = "true"
-	}
-	if userTask.Documentation.Value != "" {
-		documentation := convertDocumentationElement(userTask.Documentation)
-		res.Documentation = &documentation
-	}
-	// 多实例任务
-	if userTask.MultiInstanceLoopCharacteristics.Collection != "" {
-		multiInstanceLoopCharacteristics := flowable.MultiInstanceLoopCharacteristics{
-			Collection:      userTask.MultiInstanceLoopCharacteristics.Collection,
-			ElementVariable: userTask.MultiInstanceLoopCharacteristics.ElementVariable,
-			CompletionCondition: flowable.CompletionCondition{
-				Type:  "tFormalExpression",
-				Value: userTask.MultiInstanceLoopCharacteristics.CompletionCondition.Value,
-			},
-		}
-		res.MultiInstanceLoopCharacteristics = &multiInstanceLoopCharacteristics
-	}
-	return res
-}
-
-func convertServiceTask(serviceTask camunda.ServiceTask) flowable.ServiceTask {
-	res := flowable.ServiceTask{
-		Id:   serviceTask.Id,
-		Name: serviceTask.Name,
-	}
-	// 这里多种类型不当一同出现，故使用了 if-else-if 结构
-	if serviceTask.Class != "" {
-		res.Class = serviceTask.Class
-	} else if serviceTask.DelegateExpression != "" {
-		res.DelegateExpression = serviceTask.DelegateExpression
-	}
-	if serviceTask.Documentation.Value != "" {
-		documentation := convertDocumentationElement(serviceTask.Documentation)
-		res.Documentation = &documentation
-	}
-	return res
-}
-
-func convertFormData(formFields []camunda.FormField) flowable.ExtensionElements {
-	var formProperties = make([]flowable.FormProperty, 0)
-	for _, field := range formFields {
-		formProperties = append(formProperties, convertFormField(field))
-	}
-	return flowable.ExtensionElements{
-		FormProperties: &formProperties,
-	}
-}
-
-func convertFormField(formField camunda.FormField) flowable.FormProperty {
-	res := flowable.FormProperty{
-		Id:   formField.Id,
-		Name: formField.Label,
-		Type: formField.Type,
-		// 设置默认值
-		Readable: "true",
-		Writable: "true",
-		Required: "false",
-	}
-	// 检查表单项是否有约束条件，覆盖默认值
-	if formField.Validation.Constraint != nil && len(formField.Validation.Constraint) > 0 {
-		for _, constraint := range formField.Validation.Constraint {
-			switch constraint.Name {
-			case "required":
-				res.Required = constraint.Config
-				break
-			case "writable":
-				res.Writable = constraint.Config
-				break
-			case "readable":
-				res.Readable = constraint.Config
-				break
-			}
-		}
-	}
-	// 如果是枚举类型，需要复制枚举值
-	if formField.Type == "enum" {
-		var values = make([]flowable.Value, 0)
-		for _, value := range formField.Values {
-			values = append(values, flowable.Value{
-				Id:   value.Id,
-				Name: value.Name,
-			})
-		}
-		res.Values = &values
-	}
-	return res
-}
-
-func convertExclusiveGateway(gateway camunda.ExclusiveGateway) flowable.ExclusiveGateway {
-	return flowable.ExclusiveGateway{
-		Id:               gateway.Id,
-		Name:             gateway.Name,
-		GatewayDirection: "Diverging",
-	}
-}
-
-func convertEndEvent(endEvent camunda.EndEvent) flowable.EndEvent {
-	return flowable.EndEvent{
-		Id:   endEvent.Id,
-		Name: endEvent.Name,
-	}
-}
-
-func convertIntermediateCatchEvent(event camunda.IntermediateCatchEvent) flowable.IntermediateCatchEvent {
-	return flowable.IntermediateCatchEvent{
-		Id:   event.Id,
-		Name: event.Name,
-		MessageEventDefinition: flowable.MessageEventDefinition{
-			Id:         event.MessageEventDefinition.Id,
-			MessageRef: event.MessageEventDefinition.MessageRef,
-		},
-	}
-}
-
-func convertSequenceFlow(flow camunda.SequenceFlow) flowable.SequenceFlow {
-	res := flowable.SequenceFlow{
-		Id:        flow.Id,
-		Name:      flow.Name,
-		SourceRef: flow.SourceRef,
-		TargetRef: flow.TargetRef,
-	}
-	if flow.ConditionExpression.Value != "" {
-		res.ConditionExpression = &flowable.ConditionExpression{
-			Type:  "tFormalExpression",
-			Value: flow.ConditionExpression.Value,
-		}
-	}
-	if flow.Documentation.Value != "" {
-		documentation := convertDocumentationElement(flow.Documentation)
-		res.Documentation = &documentation
-	}
+	// TODO 子流程是否允许嵌套子流程？
 	return res
 }

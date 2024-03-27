@@ -1,6 +1,8 @@
 package flowable
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+)
 
 type UserTask struct {
 	XMLName                          xml.Name                          `xml:"userTask"`
