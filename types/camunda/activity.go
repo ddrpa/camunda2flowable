@@ -23,3 +23,9 @@ type ServiceTask struct {
 	DelegateExpression string        `xml:"http://camunda.org/schema/1.0/bpmn delegateExpression,attr"`
 	Documentation      Documentation `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL documentation"`
 }
+
+type ReceiveTask struct {
+	XMLName    xml.Name `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL receiveTask"`
+	Id         string   `xml:"id,attr"`
+	MessageRef string   `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL messageRef,attr"`
+}

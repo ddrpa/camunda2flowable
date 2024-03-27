@@ -51,11 +51,12 @@ func main() {
 
 	fMessages := ConvertMessages(cDefinitions.Message)
 	fMessagesInXML, _ := xml.MarshalIndent(fMessages, "  ", "  ")
-	fProcess := ConvertProcess(cDefinitions.Process)
+	fSignals := ConvertSignals(cDefinitions.Signal)
+	fSignalsInXML, _ := xml.MarshalIndent(fSignals, "  ", "  ")
 
+	fProcess := ConvertProcess(cDefinitions.Process)
 	definitionDir := strings.TrimSuffix(*source, filepath.Ext(*source))
-	//fileName := strings.TrimSuffix(filepath.Base(*source), filepath.Ext(*source))
-	// if same name directory exists
+	// 查找 BPMN 文件所在目录下是否有同名目录，如果有，将该目录下的 JSON 文件内容赋值给对应的 Documentation
 	if _, err := os.Stat(definitionDir); !os.IsNotExist(err) {
 		activitieyIds := make([]string, 0)
 		files, _ := os.ReadDir(definitionDir)
@@ -81,13 +82,12 @@ func main() {
 			}
 		}
 	}
-
 	fProcessInXML, _ := xml.MarshalIndent(fProcess, "  ", "  ")
 
 	// make tag self-closable
 	// 用零宽断言排除 <![CDATA[%s]]>
 	regex := regexp2.MustCompile("(?m)(?<=[A-Za-z\"]+)><\\/[A-Za-z:]*>$", regexp2.Multiline)
-	selfClosed, _ := regex.Replace(string(fMessagesInXML)+"\n"+string(fProcessInXML), "/>", -1, -1)
+	selfClosed, _ := regex.Replace(string(fMessagesInXML)+"\n"+string(fSignalsInXML)+"\n"+string(fProcessInXML), "/>", -1, -1)
 
 	fDefinitions := header + selfClosed + footer
 	fmt.Println(fDefinitions)

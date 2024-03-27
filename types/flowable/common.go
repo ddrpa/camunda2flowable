@@ -8,6 +8,12 @@ type Message struct {
 	Name    string   `xml:"name,attr"`
 }
 
+type Signal struct {
+	XMLName xml.Name `xml:"signal"`
+	Id      string   `xml:"id,attr"`
+	Name    string   `xml:"name,attr"`
+}
+
 type Process struct {
 	XMLName                 xml.Name                 `xml:"process"`
 	Id                      string                   `xml:"id,attr"`
@@ -18,6 +24,7 @@ type Process struct {
 	StartEvents             []StartEvent             `xml:"startEvent"`
 	UserTasks               []UserTask               `xml:"userTask"`
 	ServiceTasks            []ServiceTask            `xml:"serviceTask"`
+	ReceiveTasks            []ReceiveTask            `xml:"receiveTask"`
 	EndEvents               []EndEvent               `xml:"endEvent"`
 	IntermediateCatchEvents []IntermediateCatchEvent `xml:"intermediateCatchEvent"`
 	ExclusiveGateways       []ExclusiveGateway       `xml:"exclusiveGateway"`
@@ -34,6 +41,7 @@ type SubProcess struct {
 	StartEvents                      StartEvent                        `xml:"startEvent"`
 	UserTasks                        []UserTask                        `xml:"userTask"`
 	ServiceTasks                     []ServiceTask                     `xml:"serviceTask"`
+	ReceiveTasks                     []ReceiveTask                     `xml:"receiveTask"`
 	EndEvents                        []EndEvent                        `xml:"endEvent"`
 	IntermediateCatchEvents          []IntermediateCatchEvent          `xml:"intermediateCatchEvent"`
 	ExclusiveGateways                []ExclusiveGateway                `xml:"exclusiveGateway"`

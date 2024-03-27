@@ -16,6 +16,17 @@ func ConvertMessages(message []camunda.Message) []flowable.Message {
 	return res
 }
 
+func ConvertSignals(signal []camunda.Signal) []flowable.Signal {
+	var res = make([]flowable.Signal, 0)
+	for _, sig := range signal {
+		res = append(res, flowable.Signal{
+			Id:   sig.Id,
+			Name: sig.Name,
+		})
+	}
+	return res
+}
+
 func ConvertProcess(process camunda.Process) flowable.Process {
 	res := flowable.Process{
 		Id:           process.Id,
@@ -47,6 +58,15 @@ func ConvertProcess(process camunda.Process) flowable.Process {
 		serviceTasks = append(serviceTasks, convertServiceTask(serviceTask))
 	}
 	res.ServiceTasks = serviceTasks
+
+	// convert receiveTasks
+	var receiveTasks = make([]flowable.ReceiveTask, 0)
+	for _, receiveTask := range process.ReceiveTasks {
+		receiveTasks = append(receiveTasks, flowable.ReceiveTask{
+			Id:         receiveTask.Id,
+			MessageRef: receiveTask.MessageRef,
+		})
+	}
 
 	// convert endEvents
 	var endEvents = make([]flowable.EndEvent, 0)
@@ -135,6 +155,16 @@ func ConvertSubProcess(process camunda.SubProcess) flowable.SubProcess {
 		serviceTasks = append(serviceTasks, convertServiceTask(serviceTask))
 	}
 	res.ServiceTasks = serviceTasks
+
+	// convert receiveTasks
+	var receiveTasks = make([]flowable.ReceiveTask, 0)
+	for _, receiveTask := range process.ReceiveTasks {
+		receiveTasks = append(receiveTasks, flowable.ReceiveTask{
+			Id:         receiveTask.Id,
+			MessageRef: receiveTask.MessageRef,
+		})
+
+	}
 
 	// convert endEvents
 	var endEvents = make([]flowable.EndEvent, 0)

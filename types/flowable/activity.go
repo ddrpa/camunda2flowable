@@ -24,3 +24,9 @@ type ServiceTask struct {
 	DelegateExpression string         `xml:"flowable:delegateExpression,attr,omitempty"`
 	Documentation      *Documentation `xml:"documentation"`
 }
+
+type ReceiveTask struct {
+	XMLName    xml.Name `xml:"receiveTask"`
+	Id         string   `xml:"id,attr"`
+	MessageRef string   `xml:"messageRef,attr"`
+}

@@ -5,11 +5,18 @@ import "encoding/xml"
 type Definitions struct {
 	XMLName xml.Name  `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL definitions"`
 	Message []Message `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL message"`
+	Signal  []Signal  `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL signal"`
 	Process Process   `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL process"`
 }
 
 type Message struct {
 	XMLName xml.Name `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL message"`
+	Id      string   `xml:"id,attr"`
+	Name    string   `xml:"name,attr"`
+}
+
+type Signal struct {
+	XMLName xml.Name `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL signal"`
 	Id      string   `xml:"id,attr"`
 	Name    string   `xml:"name,attr"`
 }
@@ -24,6 +31,7 @@ type Process struct {
 	StartEvents             []StartEvent             `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL startEvent"`
 	UserTasks               []UserTask               `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL userTask"`
 	ServiceTasks            []ServiceTask            `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL serviceTask"`
+	ReceiveTasks            []ReceiveTask            `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL receiveTask"`
 	EndEvents               []EndEvent               `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL endEvent"`
 	IntermediateCatchEvents []IntermediateCatchEvent `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL intermediateCatchEvent"`
 	ExclusiveGateways       []ExclusiveGateway       `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL exclusiveGateway"`
@@ -40,6 +48,7 @@ type SubProcess struct {
 	StartEvents                      StartEvent                       `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL startEvent"`
 	UserTasks                        []UserTask                       `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL userTask"`
 	ServiceTasks                     []ServiceTask                    `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL serviceTask"`
+	ReceiveTasks                     []ReceiveTask                    `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL receiveTask"`
 	EndEvents                        []EndEvent                       `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL endEvent"`
 	IntermediateCatchEvents          []IntermediateCatchEvent         `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL intermediateCatchEvent"`
 	ExclusiveGateways                []ExclusiveGateway               `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL exclusiveGateway"`
