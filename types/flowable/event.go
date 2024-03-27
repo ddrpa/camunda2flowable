@@ -30,3 +30,22 @@ type MessageEventDefinition struct {
 	Id         string   `xml:"id,attr"`
 	MessageRef string   `xml:"messageRef,attr"`
 }
+
+type BoundaryEvent struct {
+	XMLName              xml.Name             `xml:"boundaryEvent"`
+	Id                   string               `xml:"id,attr"`
+	AttachedToRef        string               `xml:"attachedToRef,attr"`
+	TimerEventDefinition TimerEventDefinition `xml:"timerEventDefinition"`
+}
+
+type TimerEventDefinition struct {
+	XMLName      xml.Name     `xml:"timerEventDefinition"`
+	Id           string       `xml:"id,attr"`
+	TimeDuration TimeDuration `xml:"timeDuration"`
+}
+
+type TimeDuration struct {
+	XMLName xml.Name `xml:"timeDuration"`
+	Type    string   `xml:"xsi:type,attr"`
+	Value   string   `xml:",cdata"`
+}
