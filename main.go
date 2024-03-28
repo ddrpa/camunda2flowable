@@ -15,9 +15,9 @@ import (
 
 const (
 	Version = "0.0.1"
-
-	header = `<?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:design="http://flowable.org/design" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://flowable.org/test" design:palette="flowable-work-process-palette">`
+	header  = `<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:design="http://flowable.org/design" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://flowable.org/test" design:palette="flowable-work-process-palette">
+`
 	footer = `
 </definitions>`
 )
@@ -86,8 +86,16 @@ func main() {
 
 	// make tag self-closable
 	// 用零宽断言排除 <![CDATA[%s]]>
+	content := make([]string, 0)
+	if fMessagesInXML != nil {
+		content = append(content, string(fMessagesInXML))
+	}
+	if fSignalsInXML != nil {
+		content = append(content, string(fSignalsInXML))
+	}
 	regex := regexp2.MustCompile("(?m)(?<=[A-Za-z\"]+)><\\/[A-Za-z:]*>$", regexp2.Multiline)
-	selfClosed, _ := regex.Replace(string(fMessagesInXML)+"\n"+string(fSignalsInXML)+"\n"+string(fProcessInXML), "/>", -1, -1)
+	content = append(content, string(fProcessInXML))
+	selfClosed, _ := regex.Replace(strings.Join(content, "\n"), "/>", -1, -1)
 
 	fDefinitions := header + selfClosed + footer
 	fmt.Println(fDefinitions)

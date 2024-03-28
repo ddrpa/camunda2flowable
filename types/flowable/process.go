@@ -10,12 +10,13 @@ type Process struct {
 	Documentation           *Documentation           `xml:"documentation"`
 	SubProcesses            []SubProcess             `xml:"subProcess"`
 	StartEvents             []StartEvent             `xml:"startEvent"`
+	IntermediateCatchEvents []IntermediateCatchEvent `xml:"intermediateCatchEvent"`
+	BoundaryEvents          []BoundaryEvent          `xml:"boundaryEvent"`
+	EndEvents               []EndEvent               `xml:"endEvent"`
+	ExclusiveGateways       []ExclusiveGateway       `xml:"exclusiveGateway"`
 	UserTasks               []UserTask               `xml:"userTask"`
 	ServiceTasks            []ServiceTask            `xml:"serviceTask"`
 	ReceiveTasks            []ReceiveTask            `xml:"receiveTask"`
-	EndEvents               []EndEvent               `xml:"endEvent"`
-	IntermediateCatchEvents []IntermediateCatchEvent `xml:"intermediateCatchEvent"`
-	ExclusiveGateways       []ExclusiveGateway       `xml:"exclusiveGateway"`
 	SequenceFlows           []SequenceFlow           `xml:"sequenceFlow"`
 }
 
@@ -27,11 +28,12 @@ type SubProcess struct {
 	MultiInstanceLoopCharacteristics *MultiInstanceLoopCharacteristics `xml:"multiInstanceLoopCharacteristics"`
 	SubProcesses                     []SubProcess                      `xml:"subProcess"`
 	StartEvents                      StartEvent                        `xml:"startEvent"`
+	IntermediateCatchEvents          []IntermediateCatchEvent          `xml:"intermediateCatchEvent"`
+	BoundaryEvents                   []BoundaryEvent                   `xml:"boundaryEvent"`
+	EndEvents                        []EndEvent                        `xml:"endEvent"`
+	ExclusiveGateways                []ExclusiveGateway                `xml:"exclusiveGateway"`
 	UserTasks                        []UserTask                        `xml:"userTask"`
 	ServiceTasks                     []ServiceTask                     `xml:"serviceTask"`
 	ReceiveTasks                     []ReceiveTask                     `xml:"receiveTask"`
-	EndEvents                        []EndEvent                        `xml:"endEvent"`
-	IntermediateCatchEvents          []IntermediateCatchEvent          `xml:"intermediateCatchEvent"`
-	ExclusiveGateways                []ExclusiveGateway                `xml:"exclusiveGateway"`
 	SequenceFlows                    []SequenceFlow                    `xml:"sequenceFlow"`
 }

@@ -56,12 +56,13 @@ func (task UserTask) Convert() flowable.UserTask {
 }
 
 type ServiceTask struct {
-	XMLName            xml.Name      `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL serviceTask"`
-	Id                 string        `xml:"id,attr"`
-	Name               string        `xml:"name,attr"`
-	Class              string        `xml:"http://camunda.org/schema/1.0/bpmn class,attr"`
-	DelegateExpression string        `xml:"http://camunda.org/schema/1.0/bpmn delegateExpression,attr"`
-	Documentation      Documentation `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL documentation"`
+	XMLName            xml.Name          `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL serviceTask"`
+	Id                 string            `xml:"id,attr"`
+	Name               string            `xml:"name,attr"`
+	Class              string            `xml:"http://camunda.org/schema/1.0/bpmn class,attr"`
+	DelegateExpression string            `xml:"http://camunda.org/schema/1.0/bpmn delegateExpression,attr"`
+	Documentation      Documentation     `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL documentation"`
+	ExtensionElements  ExtensionElements `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL extensionElements"`
 }
 
 func (task ServiceTask) Convert() flowable.ServiceTask {
@@ -77,6 +78,20 @@ func (task ServiceTask) Convert() flowable.ServiceTask {
 	if task.Documentation.Value != "" {
 		documentation := task.Documentation.Convert()
 		res.Documentation = &documentation
+	}
+	if (task.ExtensionElements.Properties.Properties != nil) && (len(task.ExtensionElements.Properties.Properties) > 0) {
+		for _, property := range task.ExtensionElements.Properties.Properties {
+			switch property.Name {
+			case "async":
+				res.Async = property.Value
+				break
+			case "triggerable":
+				res.Triggerable = property.Value
+				break
+			default:
+				break
+			}
+		}
 	}
 	return res
 }

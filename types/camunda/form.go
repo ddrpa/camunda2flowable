@@ -6,8 +6,9 @@ import (
 )
 
 type ExtensionElements struct {
-	XMLName  xml.Name `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL extensionElements"`
-	FormData FormData `xml:"http://camunda.org/schema/1.0/bpmn formData"`
+	XMLName    xml.Name   `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL extensionElements"`
+	FormData   FormData   `xml:"http://camunda.org/schema/1.0/bpmn formData"`
+	Properties Properties `xml:"http://camunda.org/schema/1.0/bpmn properties"`
 }
 
 func (extensionElements ExtensionElements) Convert() flowable.ExtensionElements {
@@ -54,6 +55,7 @@ type Properties struct {
 type Property struct {
 	XMLName xml.Name `xml:"http://camunda.org/schema/1.0/bpmn property"`
 	Id      string   `xml:"id,attr"`
+	Name    string   `xml:"name,attr"`
 	Value   string   `xml:"value,attr"`
 }
 

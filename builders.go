@@ -33,8 +33,9 @@ func ConvertProcess(process camunda.Process) flowable.Process {
 	}
 
 	res.StartEvents = convertStartEvents(process.StartEvents)
-	res.EndEvents = convertEndEvents(process.EndEvents)
 	res.IntermediateCatchEvents = convertIntermediateCatchEvents(process.IntermediateCatchEvents)
+	res.BoundaryEvents = convertBoundaryEvents(process.BoundaryEvents)
+	res.EndEvents = convertEndEvents(process.EndEvents)
 
 	res.UserTasks = convertUserTasks(process.UserTasks)
 	res.ServiceTasks = convertServiceTasks(process.ServiceTasks)
@@ -62,6 +63,30 @@ func convertStartEvents(startEvents []camunda.StartEvent) []flowable.StartEvent 
 	return res
 }
 
+func convertIntermediateCatchEvents(intermediateCatchEvents []camunda.IntermediateCatchEvent) []flowable.IntermediateCatchEvent {
+	var res = make([]flowable.IntermediateCatchEvent, 0)
+	for _, intermediateCatchEvent := range intermediateCatchEvents {
+		res = append(res, intermediateCatchEvent.Convert())
+	}
+	return res
+}
+
+func convertBoundaryEvents(boundaryEvents []camunda.BoundaryEvent) []flowable.BoundaryEvent {
+	var res = make([]flowable.BoundaryEvent, 0)
+	for _, boundaryEvent := range boundaryEvents {
+		res = append(res, boundaryEvent.Convert())
+	}
+	return res
+}
+
+func convertEndEvents(endEvents []camunda.EndEvent) []flowable.EndEvent {
+	var res = make([]flowable.EndEvent, 0)
+	for _, endEvent := range endEvents {
+		res = append(res, endEvent.Convert())
+	}
+	return res
+}
+
 func convertUserTasks(userTasks []camunda.UserTask) []flowable.UserTask {
 	var res = make([]flowable.UserTask, 0)
 	for _, userTask := range userTasks {
@@ -82,22 +107,6 @@ func convertReceiveTasks(receiveTasks []camunda.ReceiveTask) []flowable.ReceiveT
 	var res = make([]flowable.ReceiveTask, 0)
 	for _, receiveTask := range receiveTasks {
 		res = append(res, receiveTask.Convert())
-	}
-	return res
-}
-
-func convertEndEvents(endEvents []camunda.EndEvent) []flowable.EndEvent {
-	var res = make([]flowable.EndEvent, 0)
-	for _, endEvent := range endEvents {
-		res = append(res, endEvent.Convert())
-	}
-	return res
-}
-
-func convertIntermediateCatchEvents(intermediateCatchEvents []camunda.IntermediateCatchEvent) []flowable.IntermediateCatchEvent {
-	var res = make([]flowable.IntermediateCatchEvent, 0)
-	for _, intermediateCatchEvent := range intermediateCatchEvents {
-		res = append(res, intermediateCatchEvent.Convert())
 	}
 	return res
 }
@@ -128,8 +137,9 @@ func convertSubProcess(process camunda.SubProcess) flowable.SubProcess {
 		documentation := process.Documentation.Convert()
 		res.Documentation = &documentation
 	}
-	res.EndEvents = convertEndEvents(process.EndEvents)
 	res.IntermediateCatchEvents = convertIntermediateCatchEvents(process.IntermediateCatchEvents)
+	res.BoundaryEvents = convertBoundaryEvents(process.BoundaryEvents)
+	res.EndEvents = convertEndEvents(process.EndEvents)
 
 	res.UserTasks = convertUserTasks(process.UserTasks)
 	res.ServiceTasks = convertServiceTasks(process.ServiceTasks)

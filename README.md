@@ -6,7 +6,7 @@
 
 你可能会问，直接写 XML 的流程定义不行吗？
 
-当你开始处理稍稍复杂一些的业务流程时，就该意识到 BPMN 2.0 标准其实是一种描述业务流的 DSL/高级语言，
+当你开始处理稍稍复杂一些的业务流程时，就该意识到 BPMN 2.0 标准其实是一种描述业务流的 DSL/编程语言，
 图形化编辑器不是为了让缺乏领域知识的人能够配置业务（虽然广告确实是这样画的饼），
 而是提供了一个 Profiler 辅助查看和分析业务流，
 这种情况下直接看 XML 就和汇编没什么两样（而且手写的话给图表中的对象有序生成 ID 也是件困难的事情）。
@@ -28,8 +28,10 @@
 
 `camunda2flowable -s example.bpmn` 将会读取 `example.bpmn` 的定义，生成 Flowable 流程定义并输出到 STDOUT。
 
-可以使用管道将输出重定向到文件中，例如 `camunda2flowable -s example.bpmn > $PROJECT/resources/processes/example.flowable.bpmn`。
+可以使用管道将输出重定向到文件中，例如 `camunda2flowable -s example.bpmn > $PROJECT_DIR/resources/processes/example.flowable.bpmn`。
 也可以使用 `watch` 等命令监控文件的变化。
+
+## 附加功能
 
 如果你像我一样使用 `<Documentation />` 节点来存储一些不被流程引擎支持/需要的信息，
 可以在 Camunda 定义的同级目录创建同名文件夹，该文件夹中的 JSON 文件内容会被复制到对应的

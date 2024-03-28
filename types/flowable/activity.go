@@ -24,6 +24,8 @@ type ServiceTask struct {
 	Name               string         `xml:"name,attr,omitempty"`
 	Class              string         `xml:"flowable:class,attr,omitempty"`
 	DelegateExpression string         `xml:"flowable:delegateExpression,attr,omitempty"`
+	Triggerable        string         `xml:"flowable:triggerable,attr,omitempty"`
+	Async              string         `xml:"flowable:async,attr,omitempty"`
 	Documentation      *Documentation `xml:"documentation"`
 }
 
