@@ -9,16 +9,49 @@ type ExtensionElements struct {
 	XMLName    xml.Name   `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL extensionElements"`
 	FormData   FormData   `xml:"http://camunda.org/schema/1.0/bpmn formData"`
 	Properties Properties `xml:"http://camunda.org/schema/1.0/bpmn properties"`
+	Fields     []Field    `xml:"http://camunda.org/schema/1.0/bpmn field"`
 }
 
-func (extensionElements ExtensionElements) Convert() flowable.ExtensionElements {
+// ConvertFormFields 转换表单字段
+func (extensionElements ExtensionElements) ConvertFormFields() []flowable.FormProperty {
 	formProperties := make([]flowable.FormProperty, 0)
 	for _, field := range extensionElements.FormData.FormFields {
 		formProperties = append(formProperties, field.Convert())
 	}
-	return flowable.ExtensionElements{
-		FormProperties: &formProperties,
-	}
+	return formProperties
+}
+
+//// 转换注入值字段
+//func (extensionElements ExtensionElements) ConvertFields() flowable.ExtensionElements {
+//	fields := make([]flowable.Field, 0)
+//	for _, field := range extensionElements.Fields {
+//		fields = append(fields, flowable.Field{
+//			Name: field.Name,
+//			Value: func() string {
+//				if field.StringValue.Value != "" {
+//					return field.StringValue.Value
+//				}
+//				return field.ExpressionValue.Value
+//			}(),
+//		})
+//	}
+//}
+
+type StringValue struct {
+	XMLName xml.Name `xml:"http://camunda.org/schema/1.0/bpmn string"`
+	Value   string   `xml:",cdata"`
+}
+
+type ExpressionValue struct {
+	XMLName xml.Name `xml:"http://camunda.org/schema/1.0/bpmn expression"`
+	Value   string   `xml:",cdata"`
+}
+
+type Field struct {
+	XMLName         xml.Name        `xml:"http://camunda.org/schema/1.0/bpmn field"`
+	Name            string          `xml:"name,attr"`
+	StringValue     StringValue     `xml:"http://camunda.org/schema/1.0/bpmn string"`
+	ExpressionValue ExpressionValue `xml:"http://camunda.org/schema/1.0/bpmn expression"`
 }
 
 type FormData struct {

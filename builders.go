@@ -153,6 +153,5 @@ func convertSubProcess(process camunda.SubProcess) flowable.SubProcess {
 		multiInstanceLoopCharacteristics := process.MultiInstanceLoopCharacteristics.Convert()
 		res.MultiInstanceLoopCharacteristics = &multiInstanceLoopCharacteristics
 	}
-	// TODO 子流程是否允许嵌套子流程？
 	return res
 }

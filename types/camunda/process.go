@@ -28,7 +28,6 @@ type SubProcess struct {
 	Name                             string                           `xml:"name,attr"`
 	Documentation                    Documentation                    `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL documentation"`
 	MultiInstanceLoopCharacteristics MultiInstanceLoopCharacteristics `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL multiInstanceLoopCharacteristics"`
-	SubProcesses                     []SubProcess                     `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL subProcess"`
 	StartEvents                      StartEvent                       `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL startEvent"`
 	IntermediateCatchEvents          []IntermediateCatchEvent         `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL intermediateCatchEvent"`
 	BoundaryEvents                   []BoundaryEvent                  `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL boundaryEvent"`

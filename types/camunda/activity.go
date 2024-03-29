@@ -23,7 +23,6 @@ func (task UserTask) Convert() flowable.UserTask {
 		Id:   task.Id,
 		Name: task.Name,
 	}
-	// 复制文档节点
 	if task.Documentation.Value != "" {
 		documentation := task.Documentation.Convert()
 		res.Documentation = &documentation
@@ -43,7 +42,10 @@ func (task UserTask) Convert() flowable.UserTask {
 	}
 	// 处理用户任务中的流程表单
 	if (task.ExtensionElements.FormData.FormFields != nil) && (len(task.ExtensionElements.FormData.FormFields) > 0) {
-		extensionElements := task.ExtensionElements.Convert()
+		processFormFields := task.ExtensionElements.ConvertFormFields()
+		extensionElements := flowable.ExtensionElements{
+			FormProperties: &processFormFields,
+		}
 		res.ExtensionElements = &extensionElements
 		res.FormFieldValidation = "true"
 	}
@@ -79,6 +81,7 @@ func (task ServiceTask) Convert() flowable.ServiceTask {
 		documentation := task.Documentation.Convert()
 		res.Documentation = &documentation
 	}
+	// 处理 triggerable 和 async 属性
 	if (task.ExtensionElements.Properties.Properties != nil) && (len(task.ExtensionElements.Properties.Properties) > 0) {
 		for _, property := range task.ExtensionElements.Properties.Properties {
 			switch property.Name {
@@ -92,6 +95,12 @@ func (task ServiceTask) Convert() flowable.ServiceTask {
 				break
 			}
 		}
+	}
+	// 处理注入字段
+	if (task.ExtensionElements.Fields != nil) && (len(task.ExtensionElements.Fields) > 0) {
+		//extensionElements := task.ExtensionElements.ConvertFields()
+		//res.ExtensionElements = &extensionElements
+
 	}
 	return res
 }

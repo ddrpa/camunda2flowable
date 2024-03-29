@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"camunda2flowable/types/camunda"
+	"camunda2flowable/types/flowable"
+	"encoding/json"
 	"encoding/xml"
 	"fmt"
 	"github.com/akamensky/argparse"
@@ -9,7 +12,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"slices"
 	"strings"
 )
 
@@ -58,26 +60,54 @@ func main() {
 	definitionDir := strings.TrimSuffix(*source, filepath.Ext(*source))
 	// 查找 BPMN 文件所在目录下是否有同名目录，如果有，将该目录下的 JSON 文件内容赋值给对应的 Documentation
 	if _, err := os.Stat(definitionDir); !os.IsNotExist(err) {
-		activityIds := make([]string, 0)
+		externalJSONDocumentationMap := make(map[string]string)
 		files, _ := os.ReadDir(definitionDir)
 		for _, f := range files {
 			if strings.HasSuffix(f.Name(), ".json") {
-				// if f is JSON file, add to array
-				activityId := strings.TrimSuffix(f.Name(), filepath.Ext(f.Name()))
-				activityIds = append(activityIds, activityId)
+				objectId := strings.TrimSuffix(f.Name(), filepath.Ext(f.Name()))
+				fileContent, _ := os.ReadFile(filepath.Join(definitionDir, f.Name()))
+				minifiedContent := &bytes.Buffer{}
+				json.Compact(minifiedContent, fileContent)
+				externalJSONDocumentationMap[objectId] = minifiedContent.String()
 			}
 		}
-		if len(activityIds) != 0 {
-			for _, event := range fProcess.StartEvents {
-				if slices.Contains(activityIds, event.Id) {
-					documentation, _ := os.ReadFile(filepath.Join(definitionDir, event.Id+".json"))
-					event.Documentation.Value = string(documentation)
+		if len(externalJSONDocumentationMap) != 0 {
+			for index, event := range fProcess.StartEvents {
+				if externalJSONDocumentationMap[event.Id] != "" {
+					if event.Documentation != nil {
+						fProcess.StartEvents[index].Documentation.Value = externalJSONDocumentationMap[event.Id]
+					} else {
+						documentation := flowable.Documentation{
+							Value: externalJSONDocumentationMap[event.Id],
+						}
+						fProcess.StartEvents[index].Documentation = &documentation
+					}
 				}
 			}
-			for _, task := range fProcess.UserTasks {
-				if slices.Contains(activityIds, task.Id) {
-					documentation, _ := os.ReadFile(filepath.Join(definitionDir, task.Id+".json"))
-					task.Documentation.Value = string(documentation)
+			for index, task := range fProcess.UserTasks {
+				if externalJSONDocumentationMap[task.Id] != "" {
+					if task.Documentation != nil {
+						fProcess.UserTasks[index].Documentation.Value = externalJSONDocumentationMap[task.Id]
+					} else {
+						documentation := flowable.Documentation{
+							Value: externalJSONDocumentationMap[task.Id],
+						}
+						fProcess.UserTasks[index].Documentation = &documentation
+					}
+				}
+			}
+			for subprocess_index, subprocess := range fProcess.SubProcesses {
+				for task_index, task := range subprocess.UserTasks {
+					if externalJSONDocumentationMap[task.Id] != "" {
+						if task.Documentation != nil {
+							fProcess.SubProcesses[subprocess_index].UserTasks[task_index].Documentation.Value = externalJSONDocumentationMap[task.Id]
+						} else {
+							documentation := flowable.Documentation{
+								Value: externalJSONDocumentationMap[task.Id],
+							}
+							fProcess.SubProcesses[subprocess_index].UserTasks[task_index].Documentation = &documentation
+						}
+					}
 				}
 			}
 		}

@@ -26,7 +26,10 @@ func (event StartEvent) Convert() flowable.StartEvent {
 	}
 	// 处理开始表单
 	if (event.ExtensionElements.FormData.FormFields != nil) && (len(event.ExtensionElements.FormData.FormFields) > 0) {
-		extensionElements := event.ExtensionElements.Convert()
+		formProperties := event.ExtensionElements.ConvertFormFields()
+		extensionElements := flowable.ExtensionElements{
+			FormProperties: &formProperties,
+		}
 		res.ExtensionElements = &extensionElements
 		res.FormFieldValidation = "true"
 	}

@@ -5,6 +5,12 @@ import "encoding/xml"
 type ExtensionElements struct {
 	XMLName        xml.Name        `xml:"extensionElements"`
 	FormProperties *[]FormProperty `xml:"flowable:formProperty"`
+	Fields         *[]Field        `xml:"flowable:field"`
+}
+
+type Field struct {
+	XMLName xml.Name `xml:"flowable:field"`
+	Name    string   `xml:"name,attr"`
 }
 
 type FormProperty struct {
