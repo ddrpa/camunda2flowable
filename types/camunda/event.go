@@ -87,14 +87,23 @@ type BoundaryEvent struct {
 	Id                   string               `xml:"id,attr"`
 	AttachedToRef        string               `xml:"attachedToRef,attr"`
 	TimerEventDefinition TimerEventDefinition `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL timerEventDefinition"`
+	ErrorEventDefinition ErrorEventDefinition `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL errorEventDefinition"`
 }
 
 func (event BoundaryEvent) Convert() flowable.BoundaryEvent {
-	return flowable.BoundaryEvent{
-		Id:                   event.Id,
-		AttachedToRef:        event.AttachedToRef,
-		TimerEventDefinition: event.TimerEventDefinition.Convert(),
+	res := flowable.BoundaryEvent{
+		Id:            event.Id,
+		AttachedToRef: event.AttachedToRef,
 	}
+	if event.TimerEventDefinition.Id != "" {
+		timerEventDefinition := event.TimerEventDefinition.Convert()
+		res.TimerEventDefinition = &timerEventDefinition
+	}
+	if event.ErrorEventDefinition.Id != "" {
+		errorEventDefinition := event.ErrorEventDefinition.Convert()
+		res.ErrorEventDefinition = &errorEventDefinition
+	}
+	return res
 }
 
 type TimerEventDefinition struct {
@@ -117,4 +126,15 @@ type TimeDuration struct {
 	XMLName xml.Name `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL timeDuration"`
 	Type    string   `xml:"http://www.w3.org/2001/XMLSchema-instance type,attr"`
 	Value   string   `xml:",cdata"`
+}
+
+type ErrorEventDefinition struct {
+	XMLName xml.Name `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL errorEventDefinition"`
+	Id      string   `xml:"id,attr"`
+}
+
+func (definition ErrorEventDefinition) Convert() flowable.ErrorEventDefinition {
+	return flowable.ErrorEventDefinition{
+		Id: definition.Id,
+	}
 }

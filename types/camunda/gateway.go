@@ -16,6 +16,6 @@ func (gateway ExclusiveGateway) Convert() flowable.ExclusiveGateway {
 	return flowable.ExclusiveGateway{
 		Id:               gateway.Id,
 		Name:             gateway.Name,
-		GatewayDirection: gateway.GatewayDirection,
+		GatewayDirection: "Diverging",
 	}
 }

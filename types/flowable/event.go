@@ -32,10 +32,11 @@ type MessageEventDefinition struct {
 }
 
 type BoundaryEvent struct {
-	XMLName              xml.Name             `xml:"boundaryEvent"`
-	Id                   string               `xml:"id,attr"`
-	AttachedToRef        string               `xml:"attachedToRef,attr"`
-	TimerEventDefinition TimerEventDefinition `xml:"timerEventDefinition"`
+	XMLName              xml.Name              `xml:"boundaryEvent"`
+	Id                   string                `xml:"id,attr"`
+	AttachedToRef        string                `xml:"attachedToRef,attr"`
+	TimerEventDefinition *TimerEventDefinition `xml:"timerEventDefinition"`
+	ErrorEventDefinition *ErrorEventDefinition `xml:"errorEventDefinition"`
 }
 
 type TimerEventDefinition struct {
@@ -48,4 +49,9 @@ type TimeDuration struct {
 	XMLName xml.Name `xml:"timeDuration"`
 	Type    string   `xml:"xsi:type,attr"`
 	Value   string   `xml:",cdata"`
+}
+
+type ErrorEventDefinition struct {
+	XMLName xml.Name `xml:"errorEventDefinition"`
+	Id      string   `xml:"id,attr"`
 }
