@@ -33,5 +33,6 @@ type ServiceTask struct {
 type ReceiveTask struct {
 	XMLName    xml.Name `xml:"receiveTask"`
 	Id         string   `xml:"id,attr"`
+	Name       string   `xml:"name,attr,omitempty"`
 	MessageRef string   `xml:"messageRef,attr"`
 }

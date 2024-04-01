@@ -108,12 +108,14 @@ func (task ServiceTask) Convert() flowable.ServiceTask {
 type ReceiveTask struct {
 	XMLName    xml.Name `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL receiveTask"`
 	Id         string   `xml:"id,attr"`
-	MessageRef string   `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL messageRef,attr"`
+	Name       string   `xml:"name,attr"`
+	MessageRef string   `xml:"messageRef,attr"`
 }
 
 func (task ReceiveTask) Convert() flowable.ReceiveTask {
 	return flowable.ReceiveTask{
 		Id:         task.Id,
+		Name:       task.Name,
 		MessageRef: task.MessageRef,
 	}
 }
