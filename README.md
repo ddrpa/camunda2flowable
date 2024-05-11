@@ -48,6 +48,9 @@
 
 流程引擎启动后可以根据相关 API 取得这部分数据。
 
+需要注意的是 `<Documentation />` 节点的内容存储在 `ACT_HI_TASKINST` 和 `ACT_RU_TASK` 表的 `DESCRIPTION_` 字段中，使用 MySQL
+存储实现时，列的类型为 `VARCHAR(4000)`。如果数据过长，可以考虑改成 `LONGTEXT` 类型，或者在这里保存一个引用 ID，在另外的系统中存储对应的数据。
+
 ## 当前问题
 
 这是一个开发中的项目，所以：

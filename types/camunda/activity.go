@@ -63,6 +63,8 @@ type ServiceTask struct {
 	Name               string            `xml:"name,attr"`
 	Class              string            `xml:"http://camunda.org/schema/1.0/bpmn class,attr"`
 	DelegateExpression string            `xml:"http://camunda.org/schema/1.0/bpmn delegateExpression,attr"`
+	Expression         string            `xml:"http://camunda.org/schema/1.0/bpmn expression,attr"`
+	ResultVariable     string            `xml:"http://camunda.org/schema/1.0/bpmn resultVariable,attr"`
 	Documentation      Documentation     `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL documentation"`
 	ExtensionElements  ExtensionElements `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL extensionElements"`
 }
@@ -76,6 +78,11 @@ func (task ServiceTask) Convert() flowable.ServiceTask {
 		res.Class = task.Class
 	} else if task.DelegateExpression != "" {
 		res.DelegateExpression = task.DelegateExpression
+	} else if task.Expression != "" {
+		res.Expression = task.Expression
+	}
+	if task.ResultVariable != "" {
+		res.ResultVariable = task.ResultVariable
 	}
 	if task.Documentation.Value != "" {
 		documentation := task.Documentation.Convert()
