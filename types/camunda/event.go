@@ -83,11 +83,12 @@ func (definition MessageEventDefinition) Convert() flowable.MessageEventDefiniti
 }
 
 type BoundaryEvent struct {
-	XMLName              xml.Name             `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL boundaryEvent"`
-	Id                   string               `xml:"id,attr"`
-	AttachedToRef        string               `xml:"attachedToRef,attr"`
-	TimerEventDefinition TimerEventDefinition `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL timerEventDefinition"`
-	ErrorEventDefinition ErrorEventDefinition `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL errorEventDefinition"`
+	XMLName                xml.Name               `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL boundaryEvent"`
+	Id                     string                 `xml:"id,attr"`
+	AttachedToRef          string                 `xml:"attachedToRef,attr"`
+	TimerEventDefinition   TimerEventDefinition   `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL timerEventDefinition"`
+	ErrorEventDefinition   ErrorEventDefinition   `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL errorEventDefinition"`
+	MessageEventDefinition MessageEventDefinition `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL messageEventDefinition"`
 }
 
 func (event BoundaryEvent) Convert() flowable.BoundaryEvent {
@@ -102,6 +103,11 @@ func (event BoundaryEvent) Convert() flowable.BoundaryEvent {
 	if event.ErrorEventDefinition.Id != "" {
 		errorEventDefinition := event.ErrorEventDefinition.Convert()
 		res.ErrorEventDefinition = &errorEventDefinition
+	}
+	if event.MessageEventDefinition.Id != "" {
+		messageEventDefinition := event.MessageEventDefinition.Convert()
+		res.MessageEventDefinition = &messageEventDefinition
+		res.CancelActivity = "true"
 	}
 	return res
 }

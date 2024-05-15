@@ -32,11 +32,13 @@ type MessageEventDefinition struct {
 }
 
 type BoundaryEvent struct {
-	XMLName              xml.Name              `xml:"boundaryEvent"`
-	Id                   string                `xml:"id,attr"`
-	AttachedToRef        string                `xml:"attachedToRef,attr"`
-	TimerEventDefinition *TimerEventDefinition `xml:"timerEventDefinition"`
-	ErrorEventDefinition *ErrorEventDefinition `xml:"errorEventDefinition"`
+	XMLName                xml.Name                `xml:"boundaryEvent"`
+	Id                     string                  `xml:"id,attr"`
+	AttachedToRef          string                  `xml:"attachedToRef,attr"`
+	CancelActivity         string                  `xml:"cancelActivity,attr,omitempty"`
+	TimerEventDefinition   *TimerEventDefinition   `xml:"timerEventDefinition"`
+	ErrorEventDefinition   *ErrorEventDefinition   `xml:"errorEventDefinition"`
+	MessageEventDefinition *MessageEventDefinition `xml:"messageEventDefinition"`
 }
 
 type TimerEventDefinition struct {
