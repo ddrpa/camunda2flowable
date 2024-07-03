@@ -55,6 +55,8 @@ func main() {
 	fMessagesInXML, _ := xml.MarshalIndent(fMessages, "  ", "  ")
 	fSignals := ConvertSignals(cDefinitions.Signal)
 	fSignalsInXML, _ := xml.MarshalIndent(fSignals, "  ", "  ")
+	fErrors := ConvertErrors(cDefinitions.Error)
+	fErrorsInXML, _ := xml.MarshalIndent(fErrors, "  ", "  ")
 
 	fProcess := ConvertProcess(cDefinitions.Process)
 	definitionDir := strings.TrimSuffix(*source, filepath.Ext(*source))
@@ -122,6 +124,9 @@ func main() {
 	}
 	if fSignalsInXML != nil {
 		content = append(content, string(fSignalsInXML))
+	}
+	if fErrorsInXML != nil {
+		content = append(content, string(fErrorsInXML))
 	}
 	regex := regexp2.MustCompile("(?m)(?<=[A-Za-z\"]+)><\\/[A-Za-z:]*>$", regexp2.Multiline)
 	content = append(content, string(fProcessInXML))

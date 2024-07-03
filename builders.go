@@ -21,6 +21,14 @@ func ConvertSignals(signal []camunda.Signal) []flowable.Signal {
 	return res
 }
 
+func ConvertErrors(error []camunda.Error) []flowable.Error {
+	var res = make([]flowable.Error, 0)
+	for _, err := range error {
+		res = append(res, err.Convert())
+	}
+	return res
+}
+
 func ConvertProcess(process camunda.Process) flowable.Process {
 	res := flowable.Process{
 		Id:           process.Id,

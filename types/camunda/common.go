@@ -9,6 +9,7 @@ type Definitions struct {
 	XMLName xml.Name  `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL definitions"`
 	Message []Message `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL message"`
 	Signal  []Signal  `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL signal"`
+	Error   []Error   `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL error"`
 	Process Process   `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL process"`
 }
 

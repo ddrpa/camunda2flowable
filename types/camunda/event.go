@@ -135,12 +135,14 @@ type TimeDuration struct {
 }
 
 type ErrorEventDefinition struct {
-	XMLName xml.Name `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL errorEventDefinition"`
-	Id      string   `xml:"id,attr"`
+	XMLName  xml.Name `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL errorEventDefinition"`
+	Id       string   `xml:"id,attr"`
+	ErrorRef string   `xml:"errorRef,attr"`
 }
 
 func (definition ErrorEventDefinition) Convert() flowable.ErrorEventDefinition {
 	return flowable.ErrorEventDefinition{
-		Id: definition.Id,
+		Id:       definition.Id,
+		ErrorRef: definition.ErrorRef,
 	}
 }

@@ -30,3 +30,19 @@ func (s Signal) Convert() flowable.Signal {
 		Name: s.Name,
 	}
 }
+
+type Error struct {
+	XMLName       xml.Name `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL error"`
+	Id            string   `xml:"id,attr"`
+	Name          string   `xml:"name,attr"`
+	ErrorCode     string   `xml:"errorCode,attr"`
+	ErrorMessages string   `xml:"http://camunda.org/schema/1.0/bpmn errorMessage,attr"`
+}
+
+func (e Error) Convert() flowable.Error {
+	return flowable.Error{
+		Id:        e.Id,
+		Name:      e.Name,
+		ErrorCode: e.ErrorCode,
+	}
+}

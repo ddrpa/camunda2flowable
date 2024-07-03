@@ -54,6 +54,7 @@ type TimeDuration struct {
 }
 
 type ErrorEventDefinition struct {
-	XMLName xml.Name `xml:"errorEventDefinition"`
-	Id      string   `xml:"id,attr"`
+	XMLName  xml.Name `xml:"errorEventDefinition"`
+	Id       string   `xml:"id,attr"`
+	ErrorRef string   `xml:"errorRef,attr"`
 }

@@ -13,3 +13,10 @@ type Signal struct {
 	Id      string   `xml:"id,attr"`
 	Name    string   `xml:"name,attr"`
 }
+
+type Error struct {
+	XMLName   xml.Name `xml:"error"`
+	Id        string   `xml:"id,attr"`
+	Name      string   `xml:"name,attr"`
+	ErrorCode string   `xml:"errorCode,attr"`
+}
