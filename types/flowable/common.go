@@ -6,6 +6,15 @@ type ExtensionElements struct {
 	XMLName        xml.Name        `xml:"extensionElements"`
 	FormProperties *[]FormProperty `xml:"flowable:formProperty"`
 	Fields         *[]Field        `xml:"flowable:field"`
+	TaskListeners  *[]TaskListener `xml:"flowable:taskListener"`
+}
+
+type TaskListener struct {
+	XMLName            xml.Name `xml:"flowable:taskListener"`
+	Class              string   `xml:"class,attr,omitempty"`
+	Expression         string   `xml:"expression,attr,omitempty"`
+	DelegateExpression string   `xml:"delegateExpression,attr,omitempty"`
+	Event              string   `xml:"event,attr"`
 }
 
 type Field struct {

@@ -6,10 +6,11 @@ import (
 )
 
 type ExtensionElements struct {
-	XMLName    xml.Name   `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL extensionElements"`
-	FormData   FormData   `xml:"http://camunda.org/schema/1.0/bpmn formData"`
-	Properties Properties `xml:"http://camunda.org/schema/1.0/bpmn properties"`
-	Fields     []Field    `xml:"http://camunda.org/schema/1.0/bpmn field"`
+	XMLName       xml.Name       `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL extensionElements"`
+	FormData      FormData       `xml:"http://camunda.org/schema/1.0/bpmn formData"`
+	Properties    Properties     `xml:"http://camunda.org/schema/1.0/bpmn properties"`
+	Fields        []Field        `xml:"http://camunda.org/schema/1.0/bpmn field"`
+	TaskListeners []TaskListener `xml:"http://camunda.org/schema/1.0/bpmn taskListener"`
 }
 
 // ConvertFormFields 转换表单字段
@@ -37,6 +38,19 @@ func (extensionElements ExtensionElements) ConvertFormFields() []flowable.FormPr
 //	}
 //}
 
+func (extensionElements ExtensionElements) ConvertTaskListeners() []flowable.TaskListener {
+	taskListeners := make([]flowable.TaskListener, 0)
+	for _, listener := range extensionElements.TaskListeners {
+		taskListeners = append(taskListeners, flowable.TaskListener{
+			Class:              listener.Class,
+			Expression:         listener.Expression,
+			DelegateExpression: listener.DelegateExpression,
+			Event:              listener.Event,
+		})
+	}
+	return taskListeners
+}
+
 type StringValue struct {
 	XMLName xml.Name `xml:"http://camunda.org/schema/1.0/bpmn string"`
 	Value   string   `xml:",cdata"`
@@ -45,6 +59,14 @@ type StringValue struct {
 type ExpressionValue struct {
 	XMLName xml.Name `xml:"http://camunda.org/schema/1.0/bpmn expression"`
 	Value   string   `xml:",cdata"`
+}
+
+type TaskListener struct {
+	XMLName            xml.Name `xml:"http://camunda.org/schema/1.0/bpmn taskListener"`
+	Class              string   `xml:"class,attr"`
+	Expression         string   `xml:"expression,attr"`
+	DelegateExpression string   `xml:"delegateExpression,attr"`
+	Event              string   `xml:"event,attr"`
 }
 
 type Field struct {
