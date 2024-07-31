@@ -19,3 +19,16 @@ func (gateway ExclusiveGateway) Convert() flowable.ExclusiveGateway {
 		GatewayDirection: "Diverging",
 	}
 }
+
+type ParallelGateway struct {
+	XMLName xml.Name `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL parallelGateway"`
+	Id      string   `xml:"id,attr"`
+	Name    string   `xml:"name,attr"`
+}
+
+func (gateway ParallelGateway) Convert() flowable.ParallelGateway {
+	return flowable.ParallelGateway{
+		Id:   gateway.Id,
+		Name: gateway.Name,
+	}
+}

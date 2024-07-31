@@ -17,6 +17,7 @@ type Process struct {
 	BoundaryEvents          []BoundaryEvent          `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL boundaryEvent"`
 	EndEvents               []EndEvent               `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL endEvent"`
 	ExclusiveGateways       []ExclusiveGateway       `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL exclusiveGateway"`
+	ParallelGateways        []ParallelGateway        `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL parallelGateway"`
 	UserTasks               []UserTask               `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL userTask"`
 	ServiceTasks            []ServiceTask            `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL serviceTask"`
 	ReceiveTasks            []ReceiveTask            `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL receiveTask"`
@@ -35,6 +36,7 @@ type SubProcess struct {
 	BoundaryEvents                   []BoundaryEvent                  `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL boundaryEvent"`
 	EndEvents                        []EndEvent                       `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL endEvent"`
 	ExclusiveGateways                []ExclusiveGateway               `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL exclusiveGateway"`
+	ParallelGateways                 []ParallelGateway                `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL parallelGateway"`
 	UserTasks                        []UserTask                       `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL userTask"`
 	ServiceTasks                     []ServiceTask                    `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL serviceTask"`
 	ReceiveTasks                     []ReceiveTask                    `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL receiveTask"`

@@ -8,3 +8,9 @@ type ExclusiveGateway struct {
 	Name             string   `xml:"name,attr,omitempty"`
 	GatewayDirection string   `xml:"gatewayDirection,attr"`
 }
+
+type ParallelGateway struct {
+	XMLName xml.Name `xml:"parallelGateway"`
+	Id      string   `xml:"id,attr"`
+	Name    string   `xml:"name,attr,omitempty"`
+}

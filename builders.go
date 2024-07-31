@@ -51,6 +51,7 @@ func ConvertProcess(process camunda.Process) flowable.Process {
 	res.ReceiveTasks = convertReceiveTasks(process.ReceiveTasks)
 
 	res.ExclusiveGateways = convertExclusiveGateways(process.ExclusiveGateways)
+	res.ParallelGateways = convertParallelGateways(process.ParallelGateways)
 
 	res.SequenceFlows = convertSequenceFlows(process.SequenceFlows)
 
@@ -132,6 +133,14 @@ func convertExclusiveGateways(exclusiveGateways []camunda.ExclusiveGateway) []fl
 	var res = make([]flowable.ExclusiveGateway, 0)
 	for _, exclusiveGateway := range exclusiveGateways {
 		res = append(res, exclusiveGateway.Convert())
+	}
+	return res
+}
+
+func convertParallelGateways(parallelGateways []camunda.ParallelGateway) []flowable.ParallelGateway {
+	var res = make([]flowable.ParallelGateway, 0)
+	for _, parallelGateway := range parallelGateways {
+		res = append(res, parallelGateway.Convert())
 	}
 	return res
 }

@@ -15,6 +15,7 @@ type Process struct {
 	BoundaryEvents          []BoundaryEvent          `xml:"boundaryEvent"`
 	EndEvents               []EndEvent               `xml:"endEvent"`
 	ExclusiveGateways       []ExclusiveGateway       `xml:"exclusiveGateway"`
+	ParallelGateways        []ParallelGateway        `xml:"parallelGateway"`
 	UserTasks               []UserTask               `xml:"userTask"`
 	ServiceTasks            []ServiceTask            `xml:"serviceTask"`
 	ReceiveTasks            []ReceiveTask            `xml:"receiveTask"`
@@ -32,6 +33,7 @@ type SubProcess struct {
 	BoundaryEvents                   []BoundaryEvent                   `xml:"boundaryEvent"`
 	EndEvents                        []EndEvent                        `xml:"endEvent"`
 	ExclusiveGateways                []ExclusiveGateway                `xml:"exclusiveGateway"`
+	ParallelGateways                 []ParallelGateway                 `xml:"parallelGateway"`
 	UserTasks                        []UserTask                        `xml:"userTask"`
 	ServiceTasks                     []ServiceTask                     `xml:"serviceTask"`
 	ReceiveTasks                     []ReceiveTask                     `xml:"receiveTask"`
