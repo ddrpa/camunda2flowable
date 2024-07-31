@@ -11,6 +11,7 @@ type Process struct {
 	SubProcesses            []SubProcess             `xml:"subProcess"`
 	StartEvents             []StartEvent             `xml:"startEvent"`
 	IntermediateCatchEvents []IntermediateCatchEvent `xml:"intermediateCatchEvent"`
+	IntermediateThrowEvents []IntermediateThrowEvent `xml:"intermediateThrowEvent"`
 	BoundaryEvents          []BoundaryEvent          `xml:"boundaryEvent"`
 	EndEvents               []EndEvent               `xml:"endEvent"`
 	ExclusiveGateways       []ExclusiveGateway       `xml:"exclusiveGateway"`

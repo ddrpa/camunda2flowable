@@ -25,6 +25,12 @@ type IntermediateCatchEvent struct {
 	MessageEventDefinition MessageEventDefinition `xml:"messageEventDefinition"`
 }
 
+type IntermediateThrowEvent struct {
+	XMLName                xml.Name               `xml:"intermediateThrowEvent"`
+	Id                     string                 `xml:"id,attr"`
+	MessageEventDefinition MessageEventDefinition `xml:"messageEventDefinition"`
+}
+
 type MessageEventDefinition struct {
 	XMLName    xml.Name `xml:"messageEventDefinition"`
 	Id         string   `xml:"id,attr"`

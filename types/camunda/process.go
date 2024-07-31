@@ -13,6 +13,7 @@ type Process struct {
 	SubProcesses            []SubProcess             `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL subProcess"`
 	StartEvents             []StartEvent             `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL startEvent"`
 	IntermediateCatchEvents []IntermediateCatchEvent `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL intermediateCatchEvent"`
+	IntermediateThrowEvents []IntermediateThrowEvent `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL intermediateThrowEvent"`
 	BoundaryEvents          []BoundaryEvent          `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL boundaryEvent"`
 	EndEvents               []EndEvent               `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL endEvent"`
 	ExclusiveGateways       []ExclusiveGateway       `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL exclusiveGateway"`
@@ -30,6 +31,7 @@ type SubProcess struct {
 	MultiInstanceLoopCharacteristics MultiInstanceLoopCharacteristics `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL multiInstanceLoopCharacteristics"`
 	StartEvents                      StartEvent                       `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL startEvent"`
 	IntermediateCatchEvents          []IntermediateCatchEvent         `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL intermediateCatchEvent"`
+	IntermediateThrowEvents          []IntermediateThrowEvent         `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL intermediateThrowEvent"`
 	BoundaryEvents                   []BoundaryEvent                  `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL boundaryEvent"`
 	EndEvents                        []EndEvent                       `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL endEvent"`
 	ExclusiveGateways                []ExclusiveGateway               `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL exclusiveGateway"`

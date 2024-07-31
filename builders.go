@@ -42,6 +42,7 @@ func ConvertProcess(process camunda.Process) flowable.Process {
 
 	res.StartEvents = convertStartEvents(process.StartEvents)
 	res.IntermediateCatchEvents = convertIntermediateCatchEvents(process.IntermediateCatchEvents)
+	res.IntermediateThrowEvents = convertIntermediateThrowEvents(process.IntermediateThrowEvents)
 	res.BoundaryEvents = convertBoundaryEvents(process.BoundaryEvents)
 	res.EndEvents = convertEndEvents(process.EndEvents)
 
@@ -75,6 +76,14 @@ func convertIntermediateCatchEvents(intermediateCatchEvents []camunda.Intermedia
 	var res = make([]flowable.IntermediateCatchEvent, 0)
 	for _, intermediateCatchEvent := range intermediateCatchEvents {
 		res = append(res, intermediateCatchEvent.Convert())
+	}
+	return res
+}
+
+func convertIntermediateThrowEvents(intermediateThrowEvents []camunda.IntermediateThrowEvent) []flowable.IntermediateThrowEvent {
+	var res = make([]flowable.IntermediateThrowEvent, 0)
+	for _, intermediateThrowEvent := range intermediateThrowEvents {
+		res = append(res, intermediateThrowEvent.Convert())
 	}
 	return res
 }

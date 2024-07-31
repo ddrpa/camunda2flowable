@@ -69,6 +69,19 @@ func (event IntermediateCatchEvent) Convert() flowable.IntermediateCatchEvent {
 	}
 }
 
+type IntermediateThrowEvent struct {
+	XMLName                xml.Name               `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL intermediateThrowEvent"`
+	Id                     string                 `xml:"id,attr"`
+	MessageEventDefinition MessageEventDefinition `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL messageEventDefinition"`
+}
+
+func (event IntermediateThrowEvent) Convert() flowable.IntermediateThrowEvent {
+	return flowable.IntermediateThrowEvent{
+		Id:                     event.Id,
+		MessageEventDefinition: event.MessageEventDefinition.Convert(),
+	}
+}
+
 type MessageEventDefinition struct {
 	XMLName    xml.Name `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL messageEventDefinition"`
 	Id         string   `xml:"id,attr"`
