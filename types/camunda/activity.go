@@ -40,18 +40,25 @@ func (task UserTask) Convert() flowable.UserTask {
 	if task.DueDate != "" {
 		res.DueDate = task.DueDate
 	}
+	// 处理扩展元素
+	requireExtensionElements := false
 	extensionElements := flowable.ExtensionElements{}
-	res.ExtensionElements = &extensionElements
-	// 处理用户任务中的流程表单
+	// 流程表单
 	if (task.ExtensionElements.FormData.FormFields != nil) && (len(task.ExtensionElements.FormData.FormFields) > 0) {
 		processFormFields := task.ExtensionElements.ConvertFormFields()
 		extensionElements.FormProperties = &processFormFields
+		requireExtensionElements = true
 		res.FormFieldValidation = "true"
 	}
-	// 处理用户任务中的任务监听器
+	// 任务监听器
 	if (task.ExtensionElements.TaskListeners != nil) && (len(task.ExtensionElements.TaskListeners) > 0) {
 		taskListeners := task.ExtensionElements.ConvertTaskListeners()
 		extensionElements.TaskListeners = &taskListeners
+		requireExtensionElements = true
+	}
+	// 存在扩展元素则添加到用户任务定义中
+	if requireExtensionElements {
+		res.ExtensionElements = &extensionElements
 	}
 	// 是否为多实例任务
 	if task.MultiInstanceLoopCharacteristics.Collection != "" {
