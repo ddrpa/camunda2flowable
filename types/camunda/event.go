@@ -59,27 +59,45 @@ type IntermediateCatchEvent struct {
 	Id                     string                 `xml:"id,attr"`
 	Name                   string                 `xml:"name,attr"`
 	MessageEventDefinition MessageEventDefinition `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL messageEventDefinition"`
+	SignalEventDefinition  SignalEventDefinition  `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL signalEventDefinition"`
 }
 
 func (event IntermediateCatchEvent) Convert() flowable.IntermediateCatchEvent {
-	return flowable.IntermediateCatchEvent{
-		Id:                     event.Id,
-		Name:                   event.Name,
-		MessageEventDefinition: event.MessageEventDefinition.Convert(),
+	res := flowable.IntermediateCatchEvent{
+		Id:   event.Id,
+		Name: event.Name,
 	}
+	if event.MessageEventDefinition.Id != "" {
+		messageEventDefinition := event.MessageEventDefinition.Convert()
+		res.MessageEventDefinition = &messageEventDefinition
+	}
+	if event.SignalEventDefinition.Id != "" {
+		signalEventDefinition := event.SignalEventDefinition.Convert()
+		res.SignalEventDefinition = &signalEventDefinition
+	}
+	return res
 }
 
 type IntermediateThrowEvent struct {
 	XMLName                xml.Name               `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL intermediateThrowEvent"`
 	Id                     string                 `xml:"id,attr"`
 	MessageEventDefinition MessageEventDefinition `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL messageEventDefinition"`
+	SignalEventDefinition  SignalEventDefinition  `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL signalEventDefinition"`
 }
 
 func (event IntermediateThrowEvent) Convert() flowable.IntermediateThrowEvent {
-	return flowable.IntermediateThrowEvent{
-		Id:                     event.Id,
-		MessageEventDefinition: event.MessageEventDefinition.Convert(),
+	res := flowable.IntermediateThrowEvent{
+		Id: event.Id,
 	}
+	if event.MessageEventDefinition.Id != "" {
+		messageEventDefinition := event.MessageEventDefinition.Convert()
+		res.MessageEventDefinition = &messageEventDefinition
+	}
+	if event.SignalEventDefinition.Id != "" {
+		signalEventDefinition := event.SignalEventDefinition.Convert()
+		res.SignalEventDefinition = &signalEventDefinition
+	}
+	return res
 }
 
 type MessageEventDefinition struct {
@@ -95,6 +113,19 @@ func (definition MessageEventDefinition) Convert() flowable.MessageEventDefiniti
 	}
 }
 
+type SignalEventDefinition struct {
+	XMLName   xml.Name `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL signalEventDefinition"`
+	Id        string   `xml:"id,attr"`
+	SignalRef string   `xml:"signalRef,attr"`
+}
+
+func (definition SignalEventDefinition) Convert() flowable.SignalEventDefinition {
+	return flowable.SignalEventDefinition{
+		Id:        definition.Id,
+		SignalRef: definition.SignalRef,
+	}
+}
+
 type BoundaryEvent struct {
 	XMLName                xml.Name               `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL boundaryEvent"`
 	Id                     string                 `xml:"id,attr"`
@@ -102,6 +133,7 @@ type BoundaryEvent struct {
 	TimerEventDefinition   TimerEventDefinition   `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL timerEventDefinition"`
 	ErrorEventDefinition   ErrorEventDefinition   `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL errorEventDefinition"`
 	MessageEventDefinition MessageEventDefinition `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL messageEventDefinition"`
+	SignalEventDefinition  SignalEventDefinition  `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL signalEventDefinition"`
 }
 
 func (event BoundaryEvent) Convert() flowable.BoundaryEvent {
@@ -120,6 +152,11 @@ func (event BoundaryEvent) Convert() flowable.BoundaryEvent {
 	if event.MessageEventDefinition.Id != "" {
 		messageEventDefinition := event.MessageEventDefinition.Convert()
 		res.MessageEventDefinition = &messageEventDefinition
+		res.CancelActivity = "true"
+	}
+	if event.SignalEventDefinition.Id != "" {
+		signalEventDefinition := event.SignalEventDefinition.Convert()
+		res.SignalEventDefinition = &signalEventDefinition
 		res.CancelActivity = "true"
 	}
 	return res

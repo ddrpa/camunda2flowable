@@ -29,6 +29,7 @@ type SubProcess struct {
 	Documentation                    *Documentation                    `xml:"documentation"`
 	MultiInstanceLoopCharacteristics *MultiInstanceLoopCharacteristics `xml:"multiInstanceLoopCharacteristics"`
 	StartEvents                      StartEvent                        `xml:"startEvent"`
+	IntermediateThrowEvents          []IntermediateThrowEvent          `xml:"intermediateThrowEvent"`
 	IntermediateCatchEvents          []IntermediateCatchEvent          `xml:"intermediateCatchEvent"`
 	BoundaryEvents                   []BoundaryEvent                   `xml:"boundaryEvent"`
 	EndEvents                        []EndEvent                        `xml:"endEvent"`

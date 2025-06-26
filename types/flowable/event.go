@@ -19,22 +19,30 @@ type EndEvent struct {
 }
 
 type IntermediateCatchEvent struct {
-	XMLName                xml.Name               `xml:"intermediateCatchEvent"`
-	Id                     string                 `xml:"id,attr"`
-	Name                   string                 `xml:"name,attr,omitempty"`
-	MessageEventDefinition MessageEventDefinition `xml:"messageEventDefinition"`
+	XMLName                xml.Name                `xml:"intermediateCatchEvent"`
+	Id                     string                  `xml:"id,attr"`
+	Name                   string                  `xml:"name,attr,omitempty"`
+	MessageEventDefinition *MessageEventDefinition `xml:"messageEventDefinition"`
+	SignalEventDefinition  *SignalEventDefinition  `xml:"signalEventDefinition"`
 }
 
 type IntermediateThrowEvent struct {
-	XMLName                xml.Name               `xml:"intermediateThrowEvent"`
-	Id                     string                 `xml:"id,attr"`
-	MessageEventDefinition MessageEventDefinition `xml:"messageEventDefinition"`
+	XMLName                xml.Name                `xml:"intermediateThrowEvent"`
+	Id                     string                  `xml:"id,attr"`
+	MessageEventDefinition *MessageEventDefinition `xml:"messageEventDefinition"`
+	SignalEventDefinition  *SignalEventDefinition  `xml:"signalEventDefinition"`
 }
 
 type MessageEventDefinition struct {
 	XMLName    xml.Name `xml:"messageEventDefinition"`
 	Id         string   `xml:"id,attr"`
 	MessageRef string   `xml:"messageRef,attr"`
+}
+
+type SignalEventDefinition struct {
+	XMLName   xml.Name `xml:"signalEventDefinition"`
+	Id        string   `xml:"id,attr"`
+	SignalRef string   `xml:"signalRef,attr"`
 }
 
 type BoundaryEvent struct {
@@ -45,6 +53,7 @@ type BoundaryEvent struct {
 	TimerEventDefinition   *TimerEventDefinition   `xml:"timerEventDefinition"`
 	ErrorEventDefinition   *ErrorEventDefinition   `xml:"errorEventDefinition"`
 	MessageEventDefinition *MessageEventDefinition `xml:"messageEventDefinition"`
+	SignalEventDefinition  *SignalEventDefinition  `xml:"signalEventDefinition"`
 }
 
 type TimerEventDefinition struct {
