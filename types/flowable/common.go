@@ -3,10 +3,12 @@ package flowable
 import "encoding/xml"
 
 type ExtensionElements struct {
-	XMLName        xml.Name        `xml:"extensionElements"`
-	FormProperties *[]FormProperty `xml:"flowable:formProperty"`
-	Fields         *[]Field        `xml:"flowable:field"`
-	TaskListeners  *[]TaskListener `xml:"flowable:taskListener"`
+	XMLName            xml.Name             `xml:"extensionElements"`
+	FormProperties     *[]FormProperty      `xml:"flowable:formProperty"`
+	Fields             *[]Field             `xml:"flowable:field"`
+	TaskListeners      *[]TaskListener      `xml:"flowable:taskListener"`
+	ExecutionListeners *[]ExecutionListener `xml:"flowable:executionListener"`
+	Properties         *Properties          `xml:"flowable:properties"`
 }
 
 type TaskListener struct {
@@ -56,4 +58,23 @@ type CompletionCondition struct {
 	XMLName xml.Name `xml:"completionCondition"`
 	Type    string   `xml:"xsi:type,attr"`
 	Value   string   `xml:",cdata"`
+}
+
+type ExecutionListener struct {
+	XMLName            xml.Name `xml:"flowable:executionListener"`
+	Class              string   `xml:"class,attr,omitempty"`
+	Expression         string   `xml:"expression,attr,omitempty"`
+	DelegateExpression string   `xml:"delegateExpression,attr,omitempty"`
+	Event              string   `xml:"event,attr"`
+}
+
+type Properties struct {
+	XMLName    xml.Name   `xml:"flowable:properties"`
+	Properties []Property `xml:"flowable:property"`
+}
+
+type Property struct {
+	XMLName xml.Name `xml:"flowable:property"`
+	Name    string   `xml:"name,attr"`
+	Value   string   `xml:"value,attr"`
 }
