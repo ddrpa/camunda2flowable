@@ -43,19 +43,29 @@ func (task UserTask) Convert() flowable.UserTask {
 	// 处理扩展元素
 	requireExtensionElements := false
 	extensionElements := flowable.ExtensionElements{}
+
 	// 流程表单
-	if (task.ExtensionElements.FormData.FormFields != nil) && (len(task.ExtensionElements.FormData.FormFields) > 0) {
+	if len(task.ExtensionElements.FormData.FormFields) > 0 {
 		processFormFields := task.ExtensionElements.ConvertFormFields()
 		extensionElements.FormProperties = &processFormFields
 		requireExtensionElements = true
 		res.FormFieldValidation = "true"
 	}
+
 	// 任务监听器
-	if (task.ExtensionElements.TaskListeners != nil) && (len(task.ExtensionElements.TaskListeners) > 0) {
+	if len(task.ExtensionElements.TaskListeners) > 0 {
 		taskListeners := task.ExtensionElements.ConvertTaskListeners()
 		extensionElements.TaskListeners = &taskListeners
 		requireExtensionElements = true
 	}
+
+	// 属性
+	if len(task.ExtensionElements.Properties.Properties) > 0 {
+		properties := task.ExtensionElements.ConvertProperties()
+		extensionElements.Properties = &properties
+		requireExtensionElements = true
+	}
+
 	// 存在扩展元素则添加到用户任务定义中
 	if requireExtensionElements {
 		res.ExtensionElements = &extensionElements

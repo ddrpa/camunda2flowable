@@ -8,8 +8,8 @@ type SequenceFlow struct {
 	Name                string               `xml:"name,attr,omitempty"`
 	SourceRef           string               `xml:"sourceRef,attr"`
 	TargetRef           string               `xml:"targetRef,attr"`
-	Documentation       *Documentation       //`xml:"documentation,omitempty"`
-	ConditionExpression *ConditionExpression //`xml:"conditionExpression,omitempty"`
+	Documentation       *Documentation       `xml:"documentation,omitempty"`
+	ConditionExpression *ConditionExpression `xml:"conditionExpression,omitempty"`
 }
 
 type ConditionExpression struct {

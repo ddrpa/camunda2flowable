@@ -29,6 +29,14 @@ func ConvertErrors(error []camunda.Error) []flowable.Error {
 	return res
 }
 
+func ConvertSubProcesses(subProcesses []camunda.SubProcess) []flowable.SubProcess {
+	var res = make([]flowable.SubProcess, 0)
+	for _, subProcess := range subProcesses {
+		res = append(res, subProcess.Convert())
+	}
+	return res
+}
+
 func ConvertProcess(process camunda.Process) flowable.Process {
 	res := flowable.Process{
 		Id:           process.Id,
@@ -155,14 +163,40 @@ func convertSequenceFlows(sequenceFlows []camunda.SequenceFlow) []flowable.Seque
 
 func convertSubProcess(process camunda.SubProcess) flowable.SubProcess {
 	res := flowable.SubProcess{
-		Id:          process.Id,
-		Name:        process.Name,
-		StartEvents: process.StartEvents.Convert(),
+		Id:   process.Id,
+		Name: process.Name,
 	}
+
+	// 转换文档
 	if process.Documentation.Value != "" {
 		documentation := process.Documentation.Convert()
 		res.Documentation = &documentation
 	}
+
+	// 处理扩展元素
+	requireExtensionElements := false
+	extensionElements := flowable.ExtensionElements{}
+
+	// 执行监听器
+	if len(process.ExtensionElements.ExecutionListeners) > 0 {
+		executionListeners := process.ExtensionElements.ConvertExecutionListeners()
+		extensionElements.ExecutionListeners = &executionListeners
+		requireExtensionElements = true
+	}
+
+	// 属性
+	if len(process.ExtensionElements.Properties.Properties) > 0 {
+		properties := process.ExtensionElements.ConvertProperties()
+		extensionElements.Properties = &properties
+		requireExtensionElements = true
+	}
+
+	if requireExtensionElements {
+		res.ExtensionElements = &extensionElements
+	}
+
+	// 转换子元素
+	res.StartEvents = convertStartEvents(process.StartEvents)
 	res.IntermediateThrowEvents = convertIntermediateThrowEvents(process.IntermediateThrowEvents)
 	res.IntermediateCatchEvents = convertIntermediateCatchEvents(process.IntermediateCatchEvents)
 	res.BoundaryEvents = convertBoundaryEvents(process.BoundaryEvents)
@@ -173,12 +207,15 @@ func convertSubProcess(process camunda.SubProcess) flowable.SubProcess {
 	res.ReceiveTasks = convertReceiveTasks(process.ReceiveTasks)
 
 	res.ExclusiveGateways = convertExclusiveGateways(process.ExclusiveGateways)
+	res.ParallelGateways = convertParallelGateways(process.ParallelGateways)
 
 	res.SequenceFlows = convertSequenceFlows(process.SequenceFlows)
 
+	// 多实例循环特征
 	if process.MultiInstanceLoopCharacteristics.Collection != "" {
 		multiInstanceLoopCharacteristics := process.MultiInstanceLoopCharacteristics.Convert()
 		res.MultiInstanceLoopCharacteristics = &multiInstanceLoopCharacteristics
 	}
+
 	return res
 }
