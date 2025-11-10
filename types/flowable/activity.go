@@ -13,6 +13,8 @@ type UserTask struct {
 	CandidateUsers                   string                            `xml:"flowable:candidateUsers,attr,omitempty"`
 	DueDate                          string                            `xml:"flowable:dueDate,attr,omitempty"`
 	FormFieldValidation              string                            `xml:"flowable:formFieldValidation,attr,omitempty"`
+	Async                            string                            `xml:"flowable:async,attr,omitempty"`
+	Exclusive                        string                            `xml:"flowable:exclusive,attr,omitempty"`
 	Documentation                    *Documentation                    `xml:"documentation"`
 	ExtensionElements                *ExtensionElements                `xml:"extensionElements"`
 	MultiInstanceLoopCharacteristics *MultiInstanceLoopCharacteristics `xml:"multiInstanceLoopCharacteristics"`
@@ -28,6 +30,7 @@ type ServiceTask struct {
 	ResultVariable     string             `xml:"flowable:resultVariable,attr,omitempty"`
 	Triggerable        string             `xml:"flowable:triggerable,attr,omitempty"`
 	Async              string             `xml:"flowable:async,attr,omitempty"`
+	Exclusive          string             `xml:"flowable:exclusive,attr,omitempty"`
 	Documentation      *Documentation     `xml:"documentation"`
 	ExtensionElements  *ExtensionElements `xml:"extensionElements"`
 }
