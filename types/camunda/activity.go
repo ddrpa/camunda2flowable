@@ -13,6 +13,9 @@ type UserTask struct {
 	CandidateGroups                  string                           `xml:"http://camunda.org/schema/1.0/bpmn candidateGroups,attr"`
 	CandidateUsers                   string                           `xml:"http://camunda.org/schema/1.0/bpmn candidateUsers,attr"`
 	DueDate                          string                           `xml:"http://camunda.org/schema/1.0/bpmn dueDate,attr"`
+	AsyncBefore                      string                           `xml:"http://camunda.org/schema/1.0/bpmn asyncBefore,attr"`
+	AsyncAfter                       string                           `xml:"http://camunda.org/schema/1.0/bpmn asyncAfter,attr"`
+	Exclusive                        string                           `xml:"http://camunda.org/schema/1.0/bpmn exclusive,attr"`
 	ExtensionElements                ExtensionElements                `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL extensionElements"`
 	Documentation                    Documentation                    `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL documentation"`
 	MultiInstanceLoopCharacteristics MultiInstanceLoopCharacteristics `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL multiInstanceLoopCharacteristics"`
@@ -75,6 +78,16 @@ func (task UserTask) Convert() flowable.UserTask {
 		multiInstanceLoopCharacteristics := task.MultiInstanceLoopCharacteristics.Convert()
 		res.MultiInstanceLoopCharacteristics = &multiInstanceLoopCharacteristics
 	}
+	// 处理异步配置
+	// Camunda使用asyncBefore和asyncAfter，Flowable使用单一的async属性
+	// 如果asyncBefore或asyncAfter任意一个为true，则设置async为true
+	if task.AsyncBefore == "true" || task.AsyncAfter == "true" {
+		res.Async = "true"
+	}
+	// 处理exclusive属性
+	if task.Exclusive != "" {
+		res.Exclusive = task.Exclusive
+	}
 	return res
 }
 
@@ -86,6 +99,9 @@ type ServiceTask struct {
 	DelegateExpression string            `xml:"http://camunda.org/schema/1.0/bpmn delegateExpression,attr"`
 	Expression         string            `xml:"http://camunda.org/schema/1.0/bpmn expression,attr"`
 	ResultVariable     string            `xml:"http://camunda.org/schema/1.0/bpmn resultVariable,attr"`
+	AsyncBefore        string            `xml:"http://camunda.org/schema/1.0/bpmn asyncBefore,attr"`
+	AsyncAfter         string            `xml:"http://camunda.org/schema/1.0/bpmn asyncAfter,attr"`
+	Exclusive          string            `xml:"http://camunda.org/schema/1.0/bpmn exclusive,attr"`
 	Documentation      Documentation     `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL documentation"`
 	ExtensionElements  ExtensionElements `xml:"http://www.omg.org/spec/BPMN/20100524/MODEL extensionElements"`
 }
@@ -109,12 +125,25 @@ func (task ServiceTask) Convert() flowable.ServiceTask {
 		documentation := task.Documentation.Convert()
 		res.Documentation = &documentation
 	}
-	// 处理 triggerable 和 async 属性
+	// 处理异步配置
+	// Camunda使用asyncBefore和asyncAfter，Flowable使用单一的async属性
+	// 如果asyncBefore或asyncAfter任意一个为true，则设置async为true
+	if task.AsyncBefore == "true" || task.AsyncAfter == "true" {
+		res.Async = "true"
+	}
+	// 处理exclusive属性
+	if task.Exclusive != "" {
+		res.Exclusive = task.Exclusive
+	}
+	// 处理 triggerable 和 async 属性（从扩展属性中读取）
 	if (task.ExtensionElements.Properties.Properties != nil) && (len(task.ExtensionElements.Properties.Properties) > 0) {
 		for _, property := range task.ExtensionElements.Properties.Properties {
 			switch property.Name {
 			case "async":
-				res.Async = property.Value
+				// 如果Properties中有async配置，优先使用它
+				if res.Async == "" {
+					res.Async = property.Value
+				}
 				break
 			case "triggerable":
 				res.Triggerable = property.Value
